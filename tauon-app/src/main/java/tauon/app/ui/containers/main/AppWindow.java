@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import tauon.app.App;
 import tauon.app.exceptions.OperationCancelledException;
 import tauon.app.services.ConfigFilesService;
+import tauon.app.services.InternalPreferencesManager;
 import tauon.app.services.SettingsConfigManager;
 import tauon.app.settings.SiteInfo;
 import tauon.app.ssh.filesystem.transfer.FileTransfer;
@@ -29,10 +30,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -106,12 +104,17 @@ public class AppWindow extends JFrame {
         if (screenWidth < 1024 || screenHeight < 650 || SettingsConfigManager.getSettings().isStartMaximized()) {
             setSize(screenWidth, screenHeight);
         } else {
-            int width = (screenWidth * 80) / 100;
-            int height = (screenHeight * 80) / 100;
-            setSize(width, height);
+            Rectangle r = InternalPreferencesManager.getLastLocation();
+            if(r != null){
+                setLocation(r.x, r.y);
+                setSize(r.width, r.height);
+            }else {
+                int width = (screenWidth * 80) / 100;
+                int height = (screenHeight * 80) / 100;
+                setSize(width, height);
+                this.setLocationRelativeTo(null);
+            }
         }
-        
-        this.setLocationRelativeTo(null);
         
         this.sessionCard = new CardLayout();
         this.cardPanel = new JPanel(this.sessionCard, true);
@@ -143,6 +146,13 @@ public class AppWindow extends JFrame {
         
         addKeyboardShortcuts();
         
+        // Save position and size on close
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                InternalPreferencesManager.setLastLocation(getBounds());
+            }
+        });
     }
     
     

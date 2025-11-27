@@ -65,8 +65,12 @@ public class SettingsDialog extends JDialog {
             defaultFoundBg;
     private JCheckBox chkConfirmBeforeDelete, chkConfirmBeforeMoveOrCopy, chkShowHiddenFilesByDefault, chkFirstFileBrowserView,
             chkUseSudo, chkPromptForSudo, chkListViewEnabled, chkTransferTemporaryDirectory,
-            chkDirectoryCache, chkShowPathBar, chkConfirmBeforeTerminalClosing, chkStartMaximized, chkShowActualDateOnlyHour,
+            chkDirectoryCache, chkShowPathBar, chkConfirmBeforeTerminalClosing, chkShowActualDateOnlyHour,
             chkUseGlobalDarkTheme, spConnectionKeepAlive;
+    
+    private JRadioButton rbStartMaximized;
+    private JRadioButton rbRememberLastSizeAndPosition;
+    
     private KeyShortcutComponent[] kcc;
     private JCheckBox chkLogWrap;
     private JSpinner spLogLinesPerPage, spLogFontSize, spConnectionTimeout;
@@ -447,8 +451,13 @@ public class SettingsDialog extends JDialog {
         chkTransferTemporaryDirectory = new JCheckBox(getBundle().getString("app.settings.general.label.transfer_temporary_directory"));
         chkDirectoryCache = new JCheckBox(getBundle().getString("app.settings.general.label.directory_caching"));
         chkShowPathBar = new JCheckBox(getBundle().getString("app.settings.general.label.current_folder"));
-
-        chkStartMaximized = new JCheckBox(getBundle().getString("app.settings.general.label.start_maximized"));
+        
+        rbStartMaximized = new JRadioButton(getBundle().getString("app.settings.general.label.start_maximized"));
+        rbRememberLastSizeAndPosition = new JRadioButton(getBundle().getString("app.settings.general.label.start_in_last_location"));
+        ButtonGroup bg = new ButtonGroup();
+        bg.add(rbStartMaximized);
+        bg.add(rbRememberLastSizeAndPosition);
+        
         chkShowActualDateOnlyHour = new JCheckBox("show actual date in hours"); //TODO i18n
 
         chkLogWrap = new JCheckBox(getBundle().getString("app.settings.general.label.word_wrap"));
@@ -491,8 +500,10 @@ public class SettingsDialog extends JDialog {
         chkPromptForSudo.setAlignmentX(Box.LEFT_ALIGNMENT);
         chkDirectoryCache.setAlignmentX(Box.LEFT_ALIGNMENT);
         chkShowPathBar.setAlignmentX(Box.LEFT_ALIGNMENT);
-
-        chkStartMaximized.setAlignmentX(Box.LEFT_ALIGNMENT);
+        
+        rbStartMaximized.setAlignmentX(Box.LEFT_ALIGNMENT);
+        rbRememberLastSizeAndPosition.setAlignmentX(Box.LEFT_ALIGNMENT);
+        
         chkShowActualDateOnlyHour.setAlignmentX(Box.LEFT_ALIGNMENT);
 
         chkLogWrap.setAlignmentX(Box.LEFT_ALIGNMENT);
@@ -521,9 +532,7 @@ public class SettingsDialog extends JDialog {
         vbox.add(chkDirectoryCache);
         vbox.add(Box.createRigidArea(new Dimension(10, 10)));
         vbox.add(chkShowPathBar);
-        vbox.add(Box.createRigidArea(new Dimension(10, 20)));
-        vbox.add(chkStartMaximized);
-        vbox.add(Box.createRigidArea(new Dimension(10, 20)));
+        vbox.add(Box.createRigidArea(new Dimension(10, 10)));
         vbox.add(chkShowActualDateOnlyHour);
         vbox.add(Box.createRigidArea(new Dimension(10, 20)));
 
@@ -559,8 +568,7 @@ public class SettingsDialog extends JDialog {
 
         SkinnedScrollPane scroll = new SkinnedScrollPane();
         scroll.setViewportView(panel);
-
-
+        
         return scroll;
     }
 
@@ -612,8 +620,10 @@ public class SettingsDialog extends JDialog {
             settings.setDirectoryCache(chkDirectoryCache.isSelected());
             settings.setShowPathBar(chkShowPathBar.isSelected());
             settings.setUseGlobalDarkTheme(chkUseGlobalDarkTheme.isSelected());
-    
-            settings.setStartMaximized(chkStartMaximized.isSelected());
+            
+            settings.setStartMaximized(rbStartMaximized.isSelected());
+            settings.setRememberLastSizeAndPosition(rbRememberLastSizeAndPosition.isSelected());
+            
             settings.setShowActualDateOnlyHour(chkShowActualDateOnlyHour.isSelected());
     
             settings.setConnectionTimeout((Integer) spConnectionTimeout.getValue());
@@ -708,7 +718,9 @@ public class SettingsDialog extends JDialog {
         chkShowPathBar.setSelected(settings.isShowPathBar());
         chkUseGlobalDarkTheme.setSelected(settings.isUseGlobalDarkTheme());
 
-        chkStartMaximized.setSelected(settings.isStartMaximized());
+        rbStartMaximized.setSelected(settings.isStartMaximized());
+        rbRememberLastSizeAndPosition.setSelected(settings.isRememberLastSizeAndPosition());
+        
         chkShowActualDateOnlyHour.setSelected(settings.isShowActualDateOnlyHour());
 
         spConnectionTimeout.setValue(settings.getConnectionTimeout());
@@ -748,7 +760,7 @@ public class SettingsDialog extends JDialog {
 
         this.chkUseMasterPassword.setSelected(settings.isUsingMasterPassword());
         this.btnChangeMasterPassword.setEnabled(settings.isUsingMasterPassword());
-
+        
     }
 
     public JPanel createEditorPanel() {
@@ -807,8 +819,19 @@ public class SettingsDialog extends JDialog {
         vbox.add(chkUseManualScaling);
         vbox.add(Box.createRigidArea(new Dimension(10, 10)));
         vbox.add(createRow(new JLabel(getBundle().getString("app.settings.misc.label.zoom_percentage")), Box.createHorizontalGlue(), spScaleValue));
+        
+        vbox.add(Box.createVerticalStrut(30));
         vbox.add(Box.createRigidArea(new Dimension(10, 10)));
         vbox.add(chkUseGlobalDarkTheme);
+        vbox.add(Box.createVerticalStrut(30));
+        
+        
+        vbox.add(Box.createRigidArea(new Dimension(10, 10)));
+        vbox.add(rbStartMaximized);
+        vbox.add(Box.createRigidArea(new Dimension(10, 10)));
+        vbox.add(rbRememberLastSizeAndPosition);
+        vbox.add(Box.createVerticalStrut(30));
+        
         vbox.setBorder(new EmptyBorder(30, 10, 10, 10));
 
         panel.add(vbox);
@@ -1011,5 +1034,5 @@ public class SettingsDialog extends JDialog {
         }
 
     }
-
+    
 }

@@ -5,7 +5,8 @@
 - Added shortcuts just as muon: 
   - https://github.com/achikoko/tauon-ssh/commit/42af469b8c9b44b6b00a931fcbecf39375c838d4
   - https://github.com/achikoko/tauon-ssh/commit/185ade3c1df35cf3e4252749afe42a66300824c7
-- [TODO] https://github.com/achikoko/tauon-ssh/commit/0fbe5923df2ded6751ae60331896d934810a2e80
+- Added option to open in last location:
+  - https://github.com/achikoko/tauon-ssh/commit/0fbe5923df2ded6751ae60331896d934810a2e80
 
 ## Fixes
 

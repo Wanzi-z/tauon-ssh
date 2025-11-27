@@ -26,6 +26,7 @@ public class Settings {
     private Constants.ConflictAction conflictAction = Constants.ConflictAction.AUTORENAME;
     private boolean confirmBeforeDelete = true;
     private boolean startMaximized = true;
+    private boolean rememberLastSizeAndPosition = false;
     private boolean confirmBeforeMoveOrCopy = false;
     private boolean showHiddenFilesByDefault = false;
     private boolean firstFileBrowserView = false;
@@ -129,7 +130,15 @@ public class Settings {
     public void setStartMaximized(boolean startMaximized) {
         this.startMaximized = startMaximized;
     }
-
+    
+    public boolean isRememberLastSizeAndPosition() {
+        return rememberLastSizeAndPosition;
+    }
+    
+    public void setRememberLastSizeAndPosition(boolean rememberLastSizeAndPosition) {
+        this.rememberLastSizeAndPosition = rememberLastSizeAndPosition;
+    }
+    
     public boolean isUseSudo() {
         return useSudo;
     }
