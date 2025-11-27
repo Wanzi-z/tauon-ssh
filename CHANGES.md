@@ -1,4 +1,26 @@
-# Tauon 3.3.0-SNAPSHOT
+# Tauon 3.3.1-SNAPSHOT
+
+## Features
+
+- Added shortcuts just as muon: 
+  - https://github.com/achikoko/tauon-ssh/commit/42af469b8c9b44b6b00a931fcbecf39375c838d4
+  - https://github.com/achikoko/tauon-ssh/commit/185ade3c1df35cf3e4252749afe42a66300824c7
+- [TODO] https://github.com/achikoko/tauon-ssh/commit/0fbe5923df2ded6751ae60331896d934810a2e80
+
+## Fixes
+
+- Exception if local terminal is opened without another being open yet
+
+## Changes
+
+- Updated Jediterm to version 3.57
+
+### TODO
+
+- Doc: https://github.com/achiikun/tauon-ssh/commit/d98d3945fb7bb0540c3ba11c550d7c3fbf11ec46
+
+
+# Tauon 3.3.0
 
 ## Features
 
@@ -19,10 +41,6 @@
 - Export & import everything from zip: https://github.com/devlinx9/muon-ssh/commit/868f89f2d2e194449fd06cb5eac7c9d9e53d2e32
 - Rewritten site import (not overwriting the existing ones)
 - Ask before deleting (in local file system): https://github.com/achiikun/tauon-ssh/commit/e30940472cb0ab0901027281d5bfb9cd8c45a106#diff-0f86d11b223f406bafaea4cf3ccf2f3a73e44c2db04c4553533a565709625e3d
-
-### TODO
-
-- Doc: https://github.com/achiikun/tauon-ssh/commit/d98d3945fb7bb0540c3ba11c550d7c3fbf11ec46
 
 # Tauon 3.2.1
 

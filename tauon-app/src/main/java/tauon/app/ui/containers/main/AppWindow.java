@@ -29,6 +29,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -68,7 +70,7 @@ public class AppWindow extends JFrame {
 //    private final FileTransferManager fileTransferManager;
     
     public final GraphicalHostKeyVerifier hostKeyVerifier;
-
+    
     private boolean desiredPanelVisible = true; // Variável para controlar o estado de visibilidade
     private boolean panelVisible = true; // Variável para controlar o estado de visibilidade
     
@@ -88,19 +90,19 @@ public class AppWindow extends JFrame {
         
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         inputBlocker = new AppInputBlocker(this);
-        
+
 //        File knownHostFile = new File(CONFIG_DIR, "known_hosts");
         File knownHostFile = ConfigFilesService.getInstance().getFile(Constants.KNOWN_HOSTS_FILE);
         hostKeyVerifier = new GraphicalHostKeyVerifier(knownHostFile);
         
         Insets inset = Toolkit.getDefaultToolkit().getScreenInsets(
                 GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration());
-
+        
         Dimension screenD = Toolkit.getDefaultToolkit().getScreenSize();
-
+        
         int screenWidth = screenD.width - inset.left - inset.right;
         int screenHeight = screenD.height - inset.top - inset.bottom;
-
+        
         if (screenWidth < 1024 || screenHeight < 650 || SettingsConfigManager.getSettings().isStartMaximized()) {
             setSize(screenWidth, screenHeight);
         } else {
@@ -108,9 +110,9 @@ public class AppWindow extends JFrame {
             int height = (screenHeight * 80) / 100;
             setSize(width, height);
         }
-
+        
         this.setLocationRelativeTo(null);
-
+        
         this.sessionCard = new CardLayout();
         this.cardPanel = new JPanel(this.sessionCard, true);
         this.cardPanel.setDoubleBuffered(true);
@@ -124,21 +126,106 @@ public class AppWindow extends JFrame {
         
         this.add(sessionListPanel, BorderLayout.WEST);
         this.add(this.cardPanel);
-
-
+        
+        
         this.bottomPanel = createBottomPanel();
         this.add(this.bottomPanel, BorderLayout.SOUTH);
-
+        
         this.uploadPanel = new BackgroundTransferPanel(count ->
                 lblUploadCount.setText(count.getActiveItemsCount() + "")
         );
-
+        
         this.downloadPanel = new BackgroundTransferPanel(count ->
                 lblDownloadCount.setText(count.getActiveItemsCount() + "")
         );
-        
+
 //        this.fileTransferManager = new FileTransferManager(this, uploadPanel, downloadPanel);
+        
+        addKeyboardShortcuts();
+        
+    }
     
+    
+    private void addKeyboardShortcuts() {
+        
+        
+        KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                .addKeyEventDispatcher(e -> {
+
+                    if (e.getID() != KeyEvent.KEY_PRESSED) return false;
+
+                    boolean ctrl = (e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) != 0;
+
+                    boolean shift = (e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) != 0;
+                    boolean alt = (e.getModifiersEx() & InputEvent.ALT_DOWN_MASK) != 0;
+                    boolean isTab = (e.getKeyCode() == KeyEvent.VK_TAB);
+                    boolean isF9 = (e.getKeyCode() == KeyEvent.VK_F9);
+                    boolean isPageUp = (e.getKeyCode() == KeyEvent.VK_PAGE_DOWN);
+                    boolean isPageDown = (e.getKeyCode() == KeyEvent.VK_PAGE_UP);
+                    boolean isLKey = (e.getKeyCode() == KeyEvent.VK_L);
+                    boolean isNKey = (e.getKeyCode() == KeyEvent.VK_N);
+                    
+                    if (alt) {
+                        if (isNKey) {
+                            createFirstSessionPanel();
+                            e.consume();
+                            return true;
+                        }
+                        if (isF9) {
+                            slideSessionListPanel();
+                            e.consume();
+                            return true;
+                        }
+                        
+                        if (isLKey) {
+                            sessionListPanel.createLocalSession();
+                            e.consume();
+                            return true;
+                        }
+                    }
+                    
+                    if (ctrl) {
+                        
+                        if (isTab) {
+                            changeSessionTab(shift);
+                            e.consume();
+                            return true;
+                        }
+                        
+                        if (isPageUp) {
+                            changeTerminalTab(true);
+                            e.consume();
+                            return true;
+                        }
+                        
+                        if (isPageDown) {
+                            changeTerminalTab(false);
+                            e.consume();
+                            return true;
+                        }
+                        
+                    }
+                    return false;
+                });
+        
+    }
+    
+    
+    private void changeSessionTab(boolean shift) {
+        Integer current = sessionListPanel.getCurrentSelectedIndex();
+        if(current == null)
+            return;
+        int size = sessionListPanel.getSessionsCount();
+        current += shift ? -1 : 1;
+        current = Math.floorMod(current, size);
+        sessionListPanel.selectSession(current, true);
+    }
+    
+    private void changeTerminalTab(boolean isUp) {
+        AbstractSessionContentPanel current = sessionListPanel.getCurrentSelectedSession();
+        if(current == null)
+            return;
+        current.changeTab(isUp);
     }
     
     public synchronized ThreadPoolExecutor getBackgroundTransferPool() {
@@ -161,19 +248,19 @@ public class AppWindow extends JFrame {
         
         FileTransferProgress t;
         
-        if(fileTransfer instanceof FileTransferLocalToRemote){
+        if (fileTransfer instanceof FileTransferLocalToRemote) {
             t = uploadPanel.addNewBackgroundTransfer(fileTransfer);
-        }else if(fileTransfer instanceof FileTransferRemoteToLocal){
+        } else if (fileTransfer instanceof FileTransferRemoteToLocal) {
             t = downloadPanel.addNewBackgroundTransfer(fileTransfer);
-        }else{
+        } else {
             t = null;
         }
         
-        if(t != null)
+        if (t != null)
             fileTransfer.setProgressListener(t);
         
         getBackgroundTransferPool().submit(fileTransfer);
-        
+
 //        FileTransferProgress uiFileTransfer;
 //
 //        if (background) {
@@ -241,18 +328,18 @@ public class AppWindow extends JFrame {
     
     public void slideSessionListPanel() {
         
-        if(desiredPanelVisible != panelVisible){
+        if (desiredPanelVisible != panelVisible) {
             // Wait until animation ends
             return;
         }
         
         desiredPanelVisible = !desiredPanelVisible;
         
-        if(desiredPanelVisible){
+        if (desiredPanelVisible) {
             sessionListPanel.remove(collapsedSessionPanelTop);
             sessionListPanel.add(sessionPanelTop, BorderLayout.NORTH);
             sessionListPanel.collapsed(false);
-        }else{
+        } else {
             sessionListPanel.remove(sessionPanelTop);
             sessionListPanel.add(collapsedSessionPanelTop, BorderLayout.NORTH);
             sessionListPanel.collapsed(true);
@@ -286,13 +373,13 @@ public class AppWindow extends JFrame {
         });
         timer.start(); // Inicia o timer
     }
-
+    
     private Component createSessionPanelTop() {
 //        JLabel lblSession = new JLabel(getBundle().getString("app.ui.label.sessions"));
 //        lblSession.setFont(App.skin.getDefaultFont().deriveFont(Constants.SMALL_TEXT_SIZE));
         
         Font font = App.skin.getIconFont().deriveFont(Constants.SMALL_TEXT_SIZE);
-        Dimension dimension = new Dimension(30,30);
+        Dimension dimension = new Dimension(30, 30);
         
         JButton btnList = new JButton();
         btnList.setFont(font);
@@ -318,20 +405,20 @@ public class AppWindow extends JFrame {
         topBox.add(btnNew);
         topBox.add(Box.createRigidArea(new Dimension(5, 0)));
         topBox.add(btnLocalTerm);
-
+        
         topBox.add(Box.createHorizontalGlue());
-    
+        
         return topBox;
-
+        
     }
     
     private Component createCollapsedSessionPanelTop() {
-    
+
 //        JLabel lblSession = new JLabel(getBundle().getString("app.ui.label.sessions"));
 //        lblSession.setFont(App.skin.getDefaultFont().deriveFont(Constants.SMALL_TEXT_SIZE));
         
         Font font = App.skin.getIconFont().deriveFont(Constants.SMALL_TEXT_SIZE);
-        Dimension dimension = new Dimension(30,30);
+        Dimension dimension = new Dimension(30, 30);
         
         JButton btnList = new JButton();
         btnList.setFont(font);
@@ -345,7 +432,7 @@ public class AppWindow extends JFrame {
         btnNew.setMaximumSize(dimension);
         btnNew.addActionListener(e -> this.createFirstSessionPanel());
         btnNew.setToolTipText(getBundle().getString("app.ui.button.tooltip.open_sites"));
-        
+
 //        JButton btnNew = new JButton();
 //        btnNew.setFont(font);
 //        btnNew.setText(FontAwesomeContants.FA_TELEVISION);
@@ -379,7 +466,7 @@ public class AppWindow extends JFrame {
         return panel;
         
     }
-
+    
     /**
      * @param sessionContentPanel
      */
@@ -401,12 +488,12 @@ public class AppWindow extends JFrame {
         revalidate();
         repaint();
     }
-
+    
     private Component createBottomPanel() {
         popup = new JPopupMenu();
         popup.setBorder(new LineBorder(App.skin.getDefaultBorderColor(), 1));
         popup.setPreferredSize(new Dimension(400, 500));
-
+        
         Box b1 = Box.createHorizontalBox();
         b1.setOpaque(true);
         b1.setBackground(App.skin.getTableBackgroundColor());
@@ -418,7 +505,7 @@ public class AppWindow extends JFrame {
         lblBrand.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(CertificateValidator.registerCertificateHook(
+                if (CertificateValidator.registerCertificateHook(
                         (chain, authType) -> JOptionPane.showConfirmDialog(
                                 AppWindow.this,
                                 getBundle().getString("app.ui.trust_certificate.message"),
@@ -427,11 +514,11 @@ public class AppWindow extends JFrame {
                         ) == JOptionPane.YES_OPTION)
                 ) {
                     VersionEntry lastVersion = VersionEntry.getLastVersionFromGithub();
-                    if(lastVersion != null) {
+                    if (lastVersion != null) {
                         if (lastVersion.compareTo(VERSION) > 0) {
 //                            lblUpdate.setText(FontAwesomeContants.FA_DOWNLOAD);
 //                            lblUpdateText.setText("Update available");
-                            if(JOptionPane.showConfirmDialog(
+                            if (JOptionPane.showConfirmDialog(
                                     AppWindow.this,
                                     FormatUtils.$$(
                                             getBundle().getString("app.ui.update_check.new_version.message"),
@@ -443,9 +530,9 @@ public class AppWindow extends JFrame {
                                     getBundle().getString("app.ui.update_check.new_version.title"),
                                     JOptionPane.OK_CANCEL_OPTION,
                                     JOptionPane.INFORMATION_MESSAGE
-                            )== JOptionPane.YES_OPTION)
+                            ) == JOptionPane.YES_OPTION)
                                 PlatformUtils.openWeb(REPOSITORY_TAG_URL + lastVersion.getTagName());
-                        }else{
+                        } else {
                             JOptionPane.showMessageDialog(
                                     AppWindow.this,
                                     getBundle().getString("app.ui.update_check.no_version.message"),
@@ -453,19 +540,17 @@ public class AppWindow extends JFrame {
                                     JOptionPane.INFORMATION_MESSAGE
                             );
                         }
-                    }else{
-                        if(JOptionPane.showConfirmDialog(
+                    } else {
+                        if (JOptionPane.showConfirmDialog(
                                 AppWindow.this,
                                 getBundle().getString("app.ui.update_check.failed.message"),
                                 getBundle().getString("app.ui.update_check.failed.title"),
                                 JOptionPane.OK_CANCEL_OPTION,
                                 JOptionPane.WARNING_MESSAGE
-                        )== JOptionPane.YES_OPTION)
+                        ) == JOptionPane.YES_OPTION)
                             PlatformUtils.openWeb(REPOSITORY_URL);
                     }
                 }
-                
-                
             }
         });
         lblBrand.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -484,9 +569,9 @@ public class AppWindow extends JFrame {
         lblUrl.setCursor(new Cursor(Cursor.HAND_CURSOR));
         lblUrl.setToolTipText(getBundle().getString("app.ui.repository_url.tooltip"));
         b1.add(lblUrl);
-
+        
         b1.add(Box.createHorizontalGlue());
-
+        
         JLabel lblUpload = new JLabel();
         lblUpload.setCursor(new Cursor(Cursor.HAND_CURSOR));
         lblUpload.setFont(App.skin.getIconFont().deriveFont(Constants.MEDIUM_TEXT_SIZE));
@@ -495,23 +580,23 @@ public class AppWindow extends JFrame {
         b1.add(Box.createRigidArea(new Dimension(5, 10)));
         lblUploadCount = new JLabel("0");
         b1.add(lblUploadCount);
-
+        
         lblUpload.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 showPopup(uploadPanel, lblUpload);
             }
         });
-
+        
         lblUploadCount.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 showPopup(uploadPanel, lblUpload);
             }
         });
-
+        
         b1.add(Box.createRigidArea(new Dimension(10, 10)));
-
+        
         JLabel lblDownload = new JLabel();
         lblDownload.setBorder(null);
         lblDownload.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -521,7 +606,7 @@ public class AppWindow extends JFrame {
         b1.add(Box.createRigidArea(new Dimension(5, 10)));
         lblDownloadCount = new JLabel("0");
         b1.add(lblDownloadCount);
-
+        
         lblDownload.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -535,9 +620,9 @@ public class AppWindow extends JFrame {
                 showPopup(downloadPanel, lblDownload);
             }
         });
-
+        
         b1.add(Box.createRigidArea(new Dimension(30, 10)));
-
+        
         JLabel lblHelp = new JLabel();
         lblHelp.setFont(App.skin.getIconFont().deriveFont(Constants.MEDIUM_TEXT_SIZE));
         lblHelp.addMouseListener(new MouseAdapter() {
@@ -568,16 +653,16 @@ public class AppWindow extends JFrame {
         
         return b1;
     }
-
+    
     private void showPopup(Component panel, Component invoker) {
         popup.removeAll();
         popup.add(panel);
-
+        
         popup.show(bottomPanel, bottomPanel.getWidth() - popup.getPreferredSize().width,
                 -popup.getPreferredSize().height);
         popup.setInvoker(invoker);
     }
-
+    
     public void openSettings(SettingsPageName page) {
         SettingsDialog settingsDialog = new SettingsDialog(this);
         settingsDialog.showDialog(this, page);
@@ -586,7 +671,7 @@ public class AppWindow extends JFrame {
     public InputBlocker getInputBlocker() {
         return inputBlocker;
     }
-    
+
 //    public FileTransferManager getFileTransferManager() {
 //        return fileTransferManager;
 //    }

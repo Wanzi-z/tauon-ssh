@@ -25,6 +25,7 @@ import tauon.app.ui.components.page.Page;
 import tauon.app.ui.components.page.PageHolder;
 import tauon.app.ui.containers.main.AppWindow;
 import tauon.app.ui.dialogs.sessions.PasswordPromptHelper;
+import tauon.app.ui.laf.CustomCardLayout;
 import tauon.app.ui.utils.AlertDialogUtils;
 import tauon.app.util.misc.FormatUtils;
 import tauon.app.util.misc.LayoutUtilities;
@@ -50,7 +51,7 @@ public abstract class AbstractSessionContentPanel extends JPanel implements Page
     
     public final UUID uuid = UUID.randomUUID();
     
-    private final CardLayout cardLayout;
+    private final CustomCardLayout cardLayout;
     private final JPanel cardPanel;
     private final JRootPane rootPane;
     private final JPanel contentPane;
@@ -67,7 +68,7 @@ public abstract class AbstractSessionContentPanel extends JPanel implements Page
         super(new BorderLayout());
         this.appWindow = appWindow;
         
-        this.cardLayout = new CardLayout();
+        this.cardLayout = new CustomCardLayout();
         this.cardPanel = new JPanel(this.cardLayout);
         
         this.contentPane = new JPanel(new BorderLayout(), true);
@@ -152,6 +153,13 @@ public abstract class AbstractSessionContentPanel extends JPanel implements Page
             this.sessionInputBlocker.stopAnimation();
             this.sessionInputBlocker.setVisible(false);
         });
+    }
+    
+    public void changeTab(boolean isUp) {
+        int current = cardLayout.getCurrentCard();
+        current += isUp ? 1 : -1;
+        current %= pages.length;
+        showPage(pages[current].getId());
     }
     
     @Override

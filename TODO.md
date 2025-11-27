@@ -1,6 +1,6 @@
 # TODO
 
-List of scheduled features and bugs to be solved:
+List of identified features and bugs to be solved:
 
 ## Features
 

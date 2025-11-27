@@ -42,6 +42,8 @@ public class SessionListPanel extends JPanel {
     
     private CollapsedPopup collapsedPopup;
     
+    private Integer currentSelectedIndex = null;
+    
     /**
      *
      */
@@ -119,7 +121,7 @@ public class SessionListPanel extends JPanel {
             if (!e.getValueIsAdjusting()) {
                 int index = sessionList.getSelectedIndex();
                 if (index != -1) {
-                    this.selectSession(index);
+                    this.selectSession(index, false);
                 }
             }
         });
@@ -156,12 +158,34 @@ public class SessionListPanel extends JPanel {
             sessionList.setSelectedIndex(0);
         }
     }
-
-    public void selectSession(int index) {
+    
+    public Integer getCurrentSelectedIndex() {
+        return currentSelectedIndex;
+    }
+    
+    public int getSessionsCount(){
+        return sessionListModel.size();
+    }
+    
+    public AbstractSessionContentPanel getSession(int index){
+        return sessionListModel.get(index);
+    }
+    
+    public AbstractSessionContentPanel getCurrentSelectedSession(){
+        if(currentSelectedIndex == null)
+            return null;
+        return sessionListModel.get(currentSelectedIndex);
+    }
+    
+    public void selectSession(int index, boolean auto) {
         AbstractSessionContentPanel sessionContentPanel = sessionListModel.get(index);
+        if(auto){
+            sessionList.setSelectedIndex(index);
+        }
         window.showSession(sessionContentPanel);
         window.revalidate();
         window.repaint();
+        this.currentSelectedIndex = index;
     }
 
     public void removeSession(int index) {
@@ -174,13 +198,15 @@ public class SessionListPanel extends JPanel {
                     window.repaint();
                     sessionListModel.remove(index);
                     if (sessionListModel.isEmpty()) {
+                        currentSelectedIndex = null;
                         return;
                     }
                     if (index == sessionListModel.size()) {
-                        sessionList.setSelectedIndex(index - 1);
+                        currentSelectedIndex = index - 1;
                     } else {
-                        sessionList.setSelectedIndex(index);
+                        currentSelectedIndex = index;
                     }
+                    sessionList.setSelectedIndex(currentSelectedIndex);
                 }
             });
             
