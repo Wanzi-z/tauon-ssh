@@ -132,7 +132,8 @@ public class SshFileBrowserView extends AbstractFileBrowserView {
     public void render(String path, boolean useCache) {
         System.out.println("Rendering: " + path + " caching: " + useCache);
         this.path = path;
-        try {
+        
+        fileBrowser.getHolder().submitSSHOperation((guiHandle, instance) -> {
             SshFileSystem sshfs = this.fileBrowser.getSshFileSystem();
             if (path == null) {
                 this.path = sshfs.getHome();
@@ -144,10 +145,24 @@ public class SshFileBrowserView extends AbstractFileBrowserView {
                 this.path = sshfs.getHome();
                 renderDirectory(sshfs, this.path, useCache);
             }
-        }catch (Exception e){
-            e.printStackTrace();
-            // TODO notify user
-        }
+        });
+        
+//        try {
+//            SshFileSystem sshfs = this.fileBrowser.getSshFileSystem();
+//            if (path == null) {
+//                this.path = sshfs.getHome();
+//            }
+//            try {
+//                renderDirectory(sshfs, this.path, useCache);
+//            } catch (RemoteOperationException.FileNotFound e) {
+//                AlertDialogUtils.showInfo(this, LanguageService.getBundle().getString("app.files.message.failed_going_rendering_home"));
+//                this.path = sshfs.getHome();
+//                renderDirectory(sshfs, this.path, useCache);
+//            }
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            // TODO notify user
+//        }
     }
 
     @Override

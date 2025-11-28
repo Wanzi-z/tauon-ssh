@@ -149,7 +149,7 @@ public abstract class AbstractFileBrowserView extends JPanel implements FolderVi
         smallToolbar.add(btnUp);
 
         Box b2 = Box.createHorizontalBox();
-        b2.add(btnReload);
+        b2.add(btnReload); // TODO why twice?
         b2.setBorder(new EmptyBorder(3, 0, 3, 0));
         b2.add(btnReload);
         b2.add(btnMore);
