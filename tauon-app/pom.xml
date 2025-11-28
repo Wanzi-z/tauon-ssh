@@ -8,7 +8,7 @@
     <parent>
         <groupId>tauon</groupId>
         <artifactId>tauon</artifactId>
-        <version>3.3.0</version>
+        <version>3.3.1</version>
     </parent>
 
     <groupId>tauon-app</groupId>
@@ -51,7 +51,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.5.16</version>
+            <version>1.5.19</version>
         </dependency>
 
         <dependency>
@@ -97,7 +97,7 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
-        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
+        <!-- Used in App in Security.addProvider(...) -->
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
@@ -136,17 +136,17 @@
         </dependency>
         <!-- <dependency> <groupId>snowflake</groupId> <artifactId>terminal</artifactId>
             <version>0.0.1-SNAPSHOT</version> </dependency> -->
-        <dependency>
-            <groupId>net.i2p.crypto</groupId>
-            <artifactId>eddsa</artifactId>
-            <version>0.3.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>net.i2p.crypto</groupId>-->
+<!--            <artifactId>eddsa</artifactId>-->
+<!--            <version>0.3.0</version>-->
+<!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/com.hierynomus/sshj -->
         <dependency>
             <groupId>com.hierynomus</groupId>
             <artifactId>sshj</artifactId>
-            <version>0.39.0</version>
+            <version>0.40.0</version>
         </dependency>
 
 
