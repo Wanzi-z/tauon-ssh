@@ -97,6 +97,8 @@ public class PortForwardingPanel extends JPanel {
                 getBundle().getString("app.sites.port_forwarding.label.remote")
         });
         
+        JTextField txtName = new SkinnedTextField(30);
+        
         JTextField txtLocalHost = new SkinnedTextField(30);
         txtLocalHost.setText("127.0.0.1");
         
@@ -106,22 +108,28 @@ public class PortForwardingPanel extends JPanel {
         txtRemoteHost.setText("127.0.0.1");
 
         JSpinner spRemotePort = new JSpinner(new SpinnerNumberModel(0, 0, SessionInfoPanel.DEFAULT_MAX_PORT, 1));
+        
+        JCheckBox cbEnabled = new JCheckBox(getBundle().getString("app.sites.port_forwarding.label.enabled"));
 
         if (r != null) {
+            txtName.setText(r.getName());
             txtLocalHost.setText(r.getLocalHost());
             spLocalPort.setValue(r.getLocalPort());
             txtRemoteHost.setText(r.getRemoteHost());
             spRemotePort.setValue(r.getRemotePort());
             cmbPFType.setSelectedIndex(r.getType() == PortForwardingType.Local ? 0 : 1);
+            cbEnabled.setSelected(r.isEnabled());
         }
 
         while (JOptionPane.showOptionDialog(this,
                 new Object[]{
+                        getBundle().getString("app.sites.port_forwarding.label.name"), txtName,
                         getBundle().getString("app.sites.port_forwarding.label.type"), cmbPFType,
                         getBundle().getString("app.sites.port_forwarding.label.local_host"), txtLocalHost,
                         getBundle().getString("app.sites.port_forwarding.label.local_port"), spLocalPort,
                         getBundle().getString("app.sites.port_forwarding.label.remote_host"), txtRemoteHost,
                         getBundle().getString("app.sites.port_forwarding.label.remote_port"), spRemotePort,
+                        cbEnabled,
                 },
                 getBundle().getString("app.sites.port_forwarding.label.rule"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null,
                 null) == JOptionPane.OK_OPTION) {
@@ -139,11 +147,13 @@ public class PortForwardingPanel extends JPanel {
             if (r == null) {
                 r = new PortForwardingRule();
             }
+            r.setName(txtName.getText());
             r.setType(cmbPFType.getSelectedIndex() == 0 ? PortForwardingType.Local : PortForwardingType.Remote);
             r.setRemoteHost(host);
             r.setLocalHost(bindAddress);
             r.setRemotePort(port1);
             r.setLocalPort(port2);
+            r.setEnabled(cbEnabled.isSelected());
             return r;
         }
         return null;
@@ -152,11 +162,13 @@ public class PortForwardingPanel extends JPanel {
     private static class PFTableModel extends AbstractTableModel {
 
         private final String[] columns = {
+                getBundle().getString("app.sites.port_forwarding.label.name"),
                 getBundle().getString("app.sites.port_forwarding.label.type"),
                 getBundle().getString("app.sites.port_forwarding.label.local_host"),
                 getBundle().getString("app.sites.port_forwarding.label.local_port"),
                 getBundle().getString("app.sites.port_forwarding.label.remote_host"),
                 getBundle().getString("app.sites.port_forwarding.label.remote_port"),
+                getBundle().getString("app.sites.port_forwarding.label.enabled"),
         };
         
         private final List<PortForwardingRule> list = new ArrayList<>();
@@ -181,15 +193,19 @@ public class PortForwardingPanel extends JPanel {
             PortForwardingRule pf = list.get(rowIndex);
             switch (columnIndex) {
                 case 0:
-                    return pf.getType();
+                    return pf.getName();
                 case 1:
-                    return pf.getLocalHost();
+                    return pf.getType();
                 case 2:
-                    return pf.getLocalPort();
+                    return pf.getLocalHost();
                 case 3:
-                    return pf.getRemoteHost();
+                    return pf.getLocalPort();
                 case 4:
+                    return pf.getRemoteHost();
+                case 5:
                     return pf.getRemotePort();
+                case 6:
+                    return pf.isEnabled();
                 default:
                     return "";
             }

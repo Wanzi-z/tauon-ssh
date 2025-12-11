@@ -4,12 +4,16 @@ package tauon.app.settings;
  * Port forwarding rule, meaning of host, sourcePort and targetPort changes depending on the type of port forwarding
  */
 public class PortForwardingRule {
-
+    
+    private String name;
+    
     private PortForwardingType type;
     private String remoteHost;
     private String localHost;
     private int remotePort;
     private int localPort;
+    
+    private boolean enabled = true;
 
 //    public PortForwardingRule(PortForwardingType type, String remoteHost, int remotePort, int localPort, String localHost) {
 //        super();
@@ -63,6 +67,22 @@ public class PortForwardingRule {
         this.localHost = localHost;
     }
     
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public boolean isEnabled() {
+        return enabled;
+    }
+    
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+    
     @Deprecated
     public String getHost() {
         return localHost;
@@ -104,11 +124,13 @@ public class PortForwardingRule {
     }
 
     public PortForwardingRule copyTo(PortForwardingRule portForwardingRule) {
+        portForwardingRule.name = name;
         portForwardingRule.type = type;
         portForwardingRule.remoteHost = remoteHost;
         portForwardingRule.localHost = localHost;
         portForwardingRule.remotePort = remotePort;
         portForwardingRule.localPort = localPort;
+        portForwardingRule.enabled = enabled;
         return portForwardingRule;
     }
     
@@ -119,11 +141,13 @@ public class PortForwardingRule {
     @Override
     public String toString() {
         return "PortForwardingRule{" +
+                "name=" + name +
                 "type=" + type +
                 ", remoteHost='" + remoteHost + '\'' +
                 ", localHost='" + localHost + '\'' +
                 ", remotePort=" + remotePort +
                 ", localPort=" + localPort +
+                ", enabled=" + enabled +
                 '}';
     }
 }

@@ -133,6 +133,9 @@ public class TauonSSHClient {
                 if(openPortForwarding) {
                     
                     for (PortForwardingRule r : info.getPortForwardingRules()) {
+                        if(!r.isEnabled())
+                            continue;
+                        
                         if (r.getType() == PortForwardingRule.PortForwardingType.Local) {
                             try {
                                 forwardLocalPort(r);
@@ -351,33 +354,24 @@ public class TauonSSHClient {
         portForwardingStates.add(portForwardingState);
         
         SSHClient ssh = sshConnectedHop.sshj;
-        // This port is not created on a thread anymore. The example where this was copied from was wrong.
-//        portForwardingState.thread = new Thread(() -> {
-            
-            /*
-             * We make _server_ listen on port 8080, which forwards all connections to us as
-             * a channel, and we further forward all such channels to google.com:80
-             */
-            try {
-                ssh.getRemotePortForwarder().bind(
-                        // where the server should listen
-                        new RemotePortForwarder.Forward(r.getRemoteHost(), r.getRemotePort()),
-                        // what we do with incoming connections that are forwarded to us
-                        new SocketForwardingConnectListener(new InetSocketAddress(r.getLocalHost(), r.getLocalPort())));
-                
-                // Something to hang on to so that the forwarding stays
-//                ssh.getTransport().join();
-            } catch (ConnectionException | TransportException e) {
-                portForwardingState.thread = null;
-                guiHandle.reportPortForwardingFailed(r, e);
-            } finally {
-                portForwardingState.thread = null;
-            }
-            
-//        });
-//
-//        portForwardingState.thread.start();
-    
+        
+        /*
+         * We make _server_ listen on port 8080, which forwards all connections to us as
+         * a channel, and we further forward all such channels to google.com:80
+         */
+        try {
+            ssh.getRemotePortForwarder().bind(
+                    // where the server should listen
+                    new RemotePortForwarder.Forward(r.getRemoteHost(), r.getRemotePort()),
+                    // what we do with incoming connections that are forwarded to us
+                    new SocketForwardingConnectListener(new InetSocketAddress(r.getLocalHost(), r.getLocalPort())));
+        } catch (ConnectionException | TransportException e) {
+            portForwardingState.thread = null;
+            guiHandle.reportPortForwardingFailed(r, e);
+        } finally {
+            portForwardingState.thread = null;
+        }
+        
     }
     
     private class SSHConnectedHop {

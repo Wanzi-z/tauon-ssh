@@ -7,6 +7,7 @@
   - https://github.com/achikoko/tauon-ssh/commit/185ade3c1df35cf3e4252749afe42a66300824c7
 - Added option to open in last location:
   - https://github.com/achikoko/tauon-ssh/commit/0fbe5923df2ded6751ae60331896d934810a2e80
+- Added and name and an enable option for ports forwarding
 
 ## Fixes
 
