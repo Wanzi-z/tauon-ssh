@@ -1,11 +1,8 @@
 package tauon.app.ui.dialogs.sessions;
 
-import com.sun.source.tree.Tree;
-import org.jetbrains.annotations.NotNull;
 import tauon.app.App;
 import tauon.app.exceptions.AlreadyFailedException;
 import tauon.app.exceptions.OperationCancelledException;
-import tauon.app.services.BookmarkConfigManager;
 import tauon.app.services.SitesConfigManager;
 import tauon.app.settings.NamedItem;
 import tauon.app.settings.SessionFolder;
@@ -19,7 +16,6 @@ import tauon.app.ui.components.misc.SkinnedSplitPane;
 import tauon.app.ui.components.misc.SkinnedTextField;
 import tauon.app.ui.utils.AlertDialogUtils;
 import tauon.app.ui.utils.TreeManager;
-import tauon.app.util.misc.Constants;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -45,7 +41,7 @@ public class NewSessionDlg extends JDialog implements ActionListener, TreeSelect
     private JScrollPane jsp;
     private SessionInfoPanel sessionInfoPanel;
     private JButton btnNewHost, btnDel, btnDup, btnNewFolder, btnExport, btnImport;
-    private JButton btnConnect, btnCancel, btnSaveAndClose;
+    private JButton btnSave, btnSaveAndConnect, btnCancel, btnSaveAndClose;
     private JTextField txtName;
     private JPanel namePanel;
     private NamedItem selectedInfo;
@@ -103,7 +99,7 @@ public class NewSessionDlg extends JDialog implements ActionListener, TreeSelect
                 if (e.getClickCount() == 2) {
                     DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
                     if (node == null || node.getAllowsChildren()) return;
-                    connectClicked();
+                    saveAndConnectClicked();
                 }
             }
         });
@@ -125,10 +121,14 @@ public class NewSessionDlg extends JDialog implements ActionListener, TreeSelect
         btnDup = new JButton(getBundle().getString("app.sites.action.duplicate"));
         btnDup.addActionListener(this);
         btnDup.putClientProperty("button.name", "btnDup");
+        
+        btnSave = new JButton(getBundle().getString("general.action.save"));
+        btnSave.addActionListener(this);
+        btnSave.putClientProperty("button.name", "btnSave");
 
-        btnConnect = new JButton(getBundle().getString("app.sites.action.connect"));
-        btnConnect.addActionListener(this);
-        btnConnect.putClientProperty("button.name", "btnSaveAndConnect");
+        btnSaveAndConnect = new JButton(getBundle().getString("app.sites.action.connect"));
+        btnSaveAndConnect.addActionListener(this);
+        btnSaveAndConnect.putClientProperty("button.name", "btnSaveAndConnect");
 
         btnCancel = new JButton(getBundle().getString("general.action.cancel"));
         btnCancel.addActionListener(this);
@@ -150,9 +150,11 @@ public class NewSessionDlg extends JDialog implements ActionListener, TreeSelect
 
         Box box1 = Box.createHorizontalBox();
         box1.setBorder(new EmptyBorder(10, 10, 10, 10));
+        box1.add(Box.createHorizontalStrut(10));
+        box1.add(btnSaveAndConnect);
         box1.add(Box.createHorizontalGlue());
         box1.add(Box.createHorizontalStrut(10));
-        box1.add(btnConnect);
+        box1.add(btnSave);
         box1.add(Box.createHorizontalStrut(10));
         box1.add(btnSaveAndClose);
         box1.add(Box.createHorizontalStrut(10));
@@ -254,7 +256,7 @@ public class NewSessionDlg extends JDialog implements ActionListener, TreeSelect
         lblName.setVisible(false);
         txtName.setVisible(false);
         sessionInfoPanel.setVisible(false);
-        btnConnect.setVisible(false);
+        btnSaveAndConnect.setVisible(false);
         
         rootNode = TreeManager.loadTree(
                 SitesConfigManager.getInstance().getSessionTree(new PasswordPromptHelper(window)),
@@ -429,8 +431,11 @@ public class NewSessionDlg extends JDialog implements ActionListener, TreeSelect
                     TreeManager.selectNode(newFolder.getId(), newFolderTree, tree);
                 }
                 break;
+            case "btnSave":
+                saveClicked();
+                break;
             case "btnSaveAndConnect":
-                connectClicked();
+                saveAndConnectClicked();
                 break;
             case "btnCancelWithoutSaving":
                 buttonTriggeredClosing = true;
@@ -563,8 +568,16 @@ public class NewSessionDlg extends JDialog implements ActionListener, TreeSelect
         }
         return sibling;
     }
+    
+    private void saveClicked() {
+        try {
+            save();
+        } catch (OperationCancelledException | AlreadyFailedException ignore) {
+        
+        }
+    }
 
-    private void connectClicked() {
+    private void saveAndConnectClicked() {
         try {
             
             save();
@@ -603,7 +616,7 @@ public class NewSessionDlg extends JDialog implements ActionListener, TreeSelect
             lblName.setVisible(false);
             txtName.setVisible(false);
             sessionInfoPanel.setVisible(false);
-            btnConnect.setVisible(false);
+            btnSaveAndConnect.setVisible(false);
         }
         
         // Nothing is selected
@@ -620,14 +633,14 @@ public class NewSessionDlg extends JDialog implements ActionListener, TreeSelect
             txtName.setVisible(true);
             lblName.setVisible(true);
             txtName.setText(selectedInfo.getName());
-            btnConnect.setVisible(true);
+            btnSaveAndConnect.setVisible(true);
         } else if (nodeInfo instanceof NamedItem) {
             selectedInfo = (NamedItem) nodeInfo;
             lblName.setVisible(true);
             txtName.setVisible(true);
             txtName.setText(selectedInfo.getName());
             sessionInfoPanel.setVisible(false);
-            btnConnect.setVisible(false);
+            btnSaveAndConnect.setVisible(false);
         }
 
         revalidate();
@@ -676,8 +689,8 @@ public class NewSessionDlg extends JDialog implements ActionListener, TreeSelect
     }
 
     private void normalizeButtonSize() {
-        int width = Math.max(Math.max(btnConnect.getPreferredSize().width, btnSaveAndClose.getPreferredSize().width), btnCancel.getPreferredSize().width);
-        btnConnect.setPreferredSize(new Dimension(width, btnConnect.getPreferredSize().height));
+        int width = Math.max(Math.max(btnSaveAndConnect.getPreferredSize().width, btnSaveAndClose.getPreferredSize().width), btnCancel.getPreferredSize().width);
+        btnSaveAndConnect.setPreferredSize(new Dimension(width, btnSaveAndConnect.getPreferredSize().height));
         btnSaveAndClose.setPreferredSize(new Dimension(width, btnSaveAndClose.getPreferredSize().height));
         btnCancel.setPreferredSize(new Dimension(width, btnCancel.getPreferredSize().height));
     }
