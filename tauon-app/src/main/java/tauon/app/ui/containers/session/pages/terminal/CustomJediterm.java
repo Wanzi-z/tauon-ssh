@@ -1,6 +1,9 @@
 package tauon.app.ui.containers.session.pages.terminal;
 
 import com.jediterm.terminal.TerminalDisplay;
+import com.jediterm.terminal.TerminalStarter;
+import com.jediterm.terminal.TtyBasedArrayDataStream;
+import com.jediterm.terminal.TtyConnector;
 import com.jediterm.terminal.model.JediTerminal;
 import com.jediterm.terminal.model.StyleState;
 import com.jediterm.terminal.model.TerminalTextBuffer;
@@ -70,5 +73,15 @@ public class CustomJediterm extends JediTermWidget {
         started = true;
         super.start();
     }
-
+    
+    @Override
+    protected TerminalStarter createTerminalStarter(@NotNull JediTerminal terminal, @NotNull TtyConnector connector) {
+        return new CustomTerminalStarter(
+                terminal,
+                connector,
+                new TtyBasedArrayDataStream(connector, getTypeAheadManager()::onTerminalStateChanged),
+                getTypeAheadManager(), getExecutorServiceManager()
+        );
+    }
+    
 }

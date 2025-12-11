@@ -8,7 +8,9 @@
 - Added option to open in last location:
   - https://github.com/achikoko/tauon-ssh/commit/0fbe5923df2ded6751ae60331896d934810a2e80
 - Added and name and an enable option for ports forwarding
-
+- Solution for copying from tmux
+  - https://github.com/JetBrains/jediterm/commit/97de9196b8ee24ca5535750313de0733f22fa923
+  
 ## Fixes
 
 - Exception if local terminal is opened without another being open yet
