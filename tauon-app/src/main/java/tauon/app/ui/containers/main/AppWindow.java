@@ -441,7 +441,7 @@ public class AppWindow extends JFrame {
         btnNew.setText(FontAwesomeContants.FA_TELEVISION);
         btnNew.setMaximumSize(dimension);
         btnNew.addActionListener(e -> this.createFirstSessionPanel());
-        btnNew.setToolTipText(getBundle().getString("app.ui.button.tooltip.open_sites"));
+        btnNew.setToolTipText(getBundle().getString("app.ui.button.open_sites.tooltip"));
 
 //        JButton btnNew = new JButton();
 //        btnNew.setFont(font);
@@ -452,6 +452,7 @@ public class AppWindow extends JFrame {
         JButton btnLocalTerm = new JButton(FontAwesomeContants.FA_TERMINAL);
         btnLocalTerm.addActionListener(e -> sessionListPanel.createLocalSession());
         btnLocalTerm.setFont(App.skin.getIconFont().deriveFont(Constants.SMALL_TEXT_SIZE));
+        btnLocalTerm.setToolTipText(getBundle().getString("app.ui.button.open_local_term.tooltip"));
         
         Box listBox = Box.createHorizontalBox();
         listBox.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -577,7 +578,7 @@ public class AppWindow extends JFrame {
             }
         });
         lblUrl.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        lblUrl.setToolTipText(getBundle().getString("app.ui.repository_url.tooltip"));
+        lblUrl.setToolTipText(getBundle().getString("app.ui.button.repository_url.tooltip"));
         b1.add(lblUrl);
         
         b1.add(Box.createHorizontalGlue());
@@ -643,7 +644,7 @@ public class AppWindow extends JFrame {
         });
         lblHelp.setText(FontAwesomeContants.FA_QUESTION_CIRCLE);
         lblHelp.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        lblHelp.setToolTipText(getBundle().getString("app.ui.help.tooltip"));
+        lblHelp.setToolTipText(getBundle().getString("app.ui.button.help.tooltip"));
         b1.add(lblHelp);
         
         b1.add(Box.createRigidArea(new Dimension(30, 10)));
