@@ -51,7 +51,7 @@ public class GraphicalHostKeyVerifier extends OpenSSHKnownHostsBugfixed {
     protected boolean hostKeyChangedAction(String hostname, PublicKey key) {
         final KeyType type = KeyType.fromKey(key);
         final String fp = SecurityUtils.getFingerprint(key);
-        final String path = getFile().getAbsolutePath();
+//        final String path = getFile().getAbsolutePath();
         String msg = String.format("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n"
                 + "@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @\n"
                 + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n"
@@ -59,7 +59,7 @@ public class GraphicalHostKeyVerifier extends OpenSSHKnownHostsBugfixed {
                 + "Someone could be eavesdropping on you right now (man-in-the-middle attack)!\n"
                 + "It is also possible that the host key has just been changed.\n"
                 + "The fingerprint for the %s key sent by the remote host is\n" + "%s.\n"
-                + "Do you still want to connect to this server?", type, fp, path);
+                + "Do you still want to connect to this server?", type, fp);
         return JOptionPane.showConfirmDialog(null, msg) == JOptionPane.YES_OPTION;
     }
 

@@ -409,9 +409,6 @@ public class SshFileSystem implements FileSystem {
         return "/";
     }
 
-//    public void statFs() throws Exception {
-//    }
-    
     private List<RemoteResourceInfoWrapper> ls(String path) throws RemoteOperationException, OperationCancelledException, InterruptedException, SessionClosedException {
         return getConnectedSftpClientReturn(path, sftp -> {
             final SFTPEngine requester = sftp.getSFTPEngine();

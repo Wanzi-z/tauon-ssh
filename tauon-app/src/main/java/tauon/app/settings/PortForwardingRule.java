@@ -15,15 +15,6 @@ public class PortForwardingRule {
     
     private boolean enabled = true;
 
-//    public PortForwardingRule(PortForwardingType type, String remoteHost, int remotePort, int localPort, String localHost) {
-//        super();
-//        this.type = type;
-//        this.remoteHost = remoteHost;
-//        this.remotePort = remotePort;
-//        this.localPort = localPort;
-//        this.localHost = localHost;
-//    }
-    
     public PortForwardingRule() {
     }
 

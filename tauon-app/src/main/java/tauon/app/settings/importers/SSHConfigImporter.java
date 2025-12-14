@@ -191,46 +191,6 @@ public class SSHConfigImporter {
             total++;
         }
         
-//        SavedSessionTree tree = SitesConfigManager.getInstance().getSessionTree(new PasswordPromptHelper(parent));
-//        SessionFolder folder = tree.getFolder();
-//
-//        List<SessionFolder> folders = folder.getFolders();
-//        int total = sessions.size();
-//        SessionFolder sessionFolder;
-//        for (SiteInfo session : sessions) {
-//            session.setId(UUID.randomUUID().toString());
-//
-//            sessionFolder = new SessionFolder();
-//            sessionFolder.setId(UUID.randomUUID().toString());
-//            sessionFolder.setName(session.getName());
-//
-//            List<SiteInfo> item = new ArrayList<>();
-//            item.add(session);
-//            sessionFolder.setItems(item);
-//
-//            if (folders.contains(sessionFolder)) {
-//                if (cmbOptionsExistingInfo.getSelectedItem() == Constants.ConflictAction.SKIP) {
-//                    continue;
-//                }
-//                if (cmbOptionsExistingInfo.getSelectedItem() == Constants.ConflictAction.AUTORENAME) {
-//                    sessionFolder.setName("Copy of " + sessionFolder.getName());
-//                    folders.add(sessionFolder);
-//                } else if (cmbOptionsExistingInfo.getSelectedItem() == Constants.ConflictAction.OVERWRITE) {
-//                    folders.set(folders.indexOf(sessionFolder), sessionFolder);
-//                }
-//                imported++;
-//                continue;
-//            }
-//
-//            SitesConfigManager.getInstance().setPasswordsFrom(session);
-//            folders.add(sessionFolder);
-//            imported++;
-//        }
-//
-//        folder.setFolders(folders);
-//
-//        SitesConfigManager.getInstance().save(new PasswordPromptHelper(parent));
-        
         JOptionPane.showMessageDialog(parent,
                 FormatUtils.$$(
                         getBundle().getString("app.sites.import_dialog.result.content"),

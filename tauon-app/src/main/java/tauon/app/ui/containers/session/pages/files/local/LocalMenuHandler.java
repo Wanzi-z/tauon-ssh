@@ -75,22 +75,19 @@ public class LocalMenuHandler {
         // TODO i18n
         mOpenInFileExplorer = new JMenuItem(
                 PlatformUtils.IS_WINDOWS ? "Open in Windows Explorer" : (PlatformUtils.IS_MAC ? "Open in Finder" : "Open in File Browser"));
-        mOpenInFileExplorer.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    FileInfo file = folderView.getSelectedFiles()[0];
-                    if(file.isDirectory()){
-                        PlatformUtils.openFolderInExplorer(folderView.getSelectedFiles()[0].getPath(), null);
-                    }else{
-                        File file1 = new File(file.getPath());
-                        PlatformUtils.openFolderInExplorer(file1.getParent(), file1.getName());
-                    }
-                    
-                } catch (FileNotFoundException e1) {
-                    // TODO handle exception
-                    e1.printStackTrace();
+        mOpenInFileExplorer.addActionListener(e -> {
+            try {
+                FileInfo file = folderView.getSelectedFiles()[0];
+                if(file.isDirectory()){
+                    PlatformUtils.openFolderInExplorer(folderView.getSelectedFiles()[0].getPath(), null);
+                }else{
+                    File file1 = new File(file.getPath());
+                    PlatformUtils.openFolderInExplorer(file1.getParent(), file1.getName());
                 }
+                
+            } catch (FileNotFoundException e1) {
+                // TODO handle exception
+                e1.printStackTrace();
             }
         });
         
@@ -228,14 +225,6 @@ public class LocalMenuHandler {
                 fileBrowserView.render(baseFolder);
             }
         });
-//        fileBrowser.getHolder().executor.submit(() -> {
-//            fileBrowser.disableUi();
-//            if (fileOperations.rename(oldName, newName)) {
-//                fileBrowserView.render(baseFolder);
-//            } else {
-//                fileBrowser.enableUi();
-//            }
-//        });
     }
     
     private void delete(FileInfo[] selectedFiles, String baseFolder) {
@@ -256,17 +245,6 @@ public class LocalMenuHandler {
             }
             fileBrowserView.render(baseFolder);
         });
-//        fileBrowser.getHolder().executor.submit(() -> {
-//            fileBrowser.disableUi();
-//            for (FileInfo f : selectedFiles) {
-//                try {
-//                    new LocalFileSystem().delete(f);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            fileBrowser.enableUi();
-//        });
     }
     
     private void newFile() {
@@ -276,15 +254,6 @@ public class LocalMenuHandler {
                 fileBrowserView.render(baseFolder);
             }
         });
-//        fileBrowser.getHolder().executor.submit(() -> {
-//            fileBrowser.disableUi();
-//            String baseFolder = fileBrowserView.getCurrentDirectory();
-//            if (fileOperations.newFile(baseFolder)) {
-//                fileBrowserView.render(baseFolder);
-//            } else {
-//                fileBrowser.enableUi();
-//            }
-//        });
     }
     
     private void newFolder(String currentDirectory) {
@@ -294,15 +263,6 @@ public class LocalMenuHandler {
                 fileBrowserView.render(baseFolder);
             }
         });
-//        fileBrowser.getHolder().executor.submit(() -> {
-//            fileBrowser.disableUi();
-//            String baseFolder = currentDirectory;
-//            if (fileOperations.newFolder(baseFolder)) {
-//                fileBrowserView.render(baseFolder);
-//            } else {
-//                fileBrowser.enableUi();
-//            }
-//        });
     }
     
     private void addToFavourites() {

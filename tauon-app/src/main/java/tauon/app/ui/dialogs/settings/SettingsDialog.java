@@ -13,8 +13,6 @@ import tauon.app.services.SettingsConfigManager;
 import tauon.app.services.SitesConfigManager;
 import tauon.app.settings.BackupUtils;
 import tauon.app.settings.Settings;
-import tauon.app.ui.components.editortablemodel.EditorEntry;
-import tauon.app.ui.components.editortablemodel.EditorTableModel;
 import tauon.app.ui.components.misc.*;
 import tauon.app.ui.dialogs.sessions.PasswordPromptHelper;
 import tauon.app.ui.laf.theme.CustomTerminalTheme;

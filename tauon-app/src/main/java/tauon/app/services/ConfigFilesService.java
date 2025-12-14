@@ -114,17 +114,6 @@ public class ConfigFilesService {
         return null;
     }
     
-//    public void exportTo(File file) throws IOException {
-//        try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(file))) {
-//            for (File f : Objects.requireNonNull(directory.listFiles())) {
-//                ZipEntry ent = new ZipEntry(f.getName());
-//                out.putNextEntry(ent);
-//                out.write(Files.readAllBytes(f.toPath()));
-//                out.closeEntry();
-//            }
-//        }
-//    }
-    
     public boolean saveAndKeepOldIfFails(String file, FileConsumer consumer) {
         File tempFile = null;
         try {
@@ -230,11 +219,6 @@ public class ConfigFilesService {
         }
         
     }
-    
-//    public boolean load(String file, FileConsumer consumer) {
-//        // TODO
-//        return true;
-//    }
     
     public boolean loadOrBackup(String file, FileConsumer consumer) {
         File file1 = new File(directory, file);

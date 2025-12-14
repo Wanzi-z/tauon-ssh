@@ -153,7 +153,7 @@ public class PagedLogSearchPanel extends JPanel {
             }
             return ByteBuffer.wrap(b).getLong() - 1;
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Exception while reading line number.", e);
         }
         return -1;
     }
@@ -162,7 +162,7 @@ public class PagedLogSearchPanel extends JPanel {
         if (raf != null) {
             try {
                 raf.close();
-            } catch (Exception ex) {
+            } catch (Exception ignored) {
             }
             raf = null;
         }

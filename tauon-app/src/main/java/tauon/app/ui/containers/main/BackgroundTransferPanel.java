@@ -50,30 +50,6 @@ public class BackgroundTransferPanel extends JPanel {
         return item;
     }
     
-//    public void removePendingTransfers(SessionContentPanel sessionId) {
-//        if (!SwingUtilities.isEventDispatchThread()) {
-//            try {
-//                SwingUtilities.invokeAndWait(() -> stopSession(sessionId));
-//            } catch (InvocationTargetException | InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        } else {
-//            stopSession(sessionId);
-//        }
-//    }
-//
-//    private void stopSession(SessionContentPanel sessionId) {
-//        for (int i = 0; i < this.verticalBox.getComponentCount(); i++) {
-//            Component c = this.verticalBox.getComponent(i);
-//            if (c instanceof TransferPanelItem) {
-//                TransferPanelItem tpi = (TransferPanelItem) c;
-//                if (tpi.fileTransfer.getSession() == sessionId) {
-//                    tpi.stop();
-//                }
-//            }
-//        }
-//    }
-    
     private void incrementActive(){
         activeItemsCount.incrementAndGet();
         onItemsCountChanged.accept(this);
@@ -140,8 +116,6 @@ public class BackgroundTransferPanel extends JPanel {
         
         @Override
         public void init(long totalSize, long files) {
-//                progressLabel.setText(
-//                        String.format("Copying %s to %s", fileTransfer.getSourceName(), fileTransfer.getTargetName()));
             SwingUtilities.invokeLater(() -> {
                 incrementActive();
                 progressLabel.setText("Preparing copy...");

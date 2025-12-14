@@ -53,10 +53,6 @@ public class App {
         LOG.info("Hello!");
         LOG.debug("Java version : ".concat(System.getProperty("java.version")));
 
-//        if (Boolean.parseBoolean(System.getProperty("debugMuon"))) {
-//            Logger.getRootLogger().setLevel(Level.DEBUG);
-//        }
-        
         Security.addProvider(new BouncyCastleProvider());
         Security.setProperty("networkaddress.cache.ttl", "1");
         Security.setProperty("networkaddress.cache.negative.ttl", "1");

@@ -1,4 +1,4 @@
-package tauon.app.ui.components.editortablemodel;
+package tauon.app.ui.dialogs.settings;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;

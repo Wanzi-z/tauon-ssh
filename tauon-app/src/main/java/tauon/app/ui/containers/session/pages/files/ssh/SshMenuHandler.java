@@ -12,7 +12,7 @@ import tauon.app.ssh.SSHCommandRunner;
 import tauon.app.ssh.filesystem.FileInfo;
 import tauon.app.ssh.filesystem.FileType;
 import tauon.app.ssh.filesystem.LocalFileSystem;
-import tauon.app.ui.components.editortablemodel.EditorEntry;
+import tauon.app.ui.dialogs.settings.EditorEntry;
 import tauon.app.ui.components.misc.NativeFileChooser;
 import tauon.app.ui.containers.session.pages.files.FileBrowser;
 import tauon.app.ui.containers.session.pages.files.remote2remote.LocalPipeTransfer;
@@ -560,20 +560,6 @@ public class SshMenuHandler {
             }
         });
         
-//        fileBrowser.getHolder().executor.submit(() -> {
-//            fileBrowser.disableUi();
-//            try {
-//                if (fileOperations.rename(oldName, newName, fileBrowserView.getFileSystem(),
-//                        fileBrowserView.getSshClient(), fileBrowser.getInfo().getPassword())) {
-//                    fileBrowserView.render(baseFolder);
-//                } else {
-//                    fileBrowser.enableUi();
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                fileBrowser.enableUi();
-//            }
-//        });
     }
 
     private void delete(FileInfo[] targetList, String baseFolder) {
@@ -593,22 +579,6 @@ public class SshMenuHandler {
                 fileBrowserView.render(baseFolder);
             }
         });
-        
-//        fileBrowser.getHolder().executor.submit(() -> {
-//            fileBrowser.disableUi();
-//            try {
-//                if (fileOperations.delete(targetList, fileBrowserView.getFileSystem(),
-//                        fileBrowserView.getSshClient(), fileBrowser.getInfo().getPassword())) {
-//                    fileBrowserView.render(baseFolder);
-//                } else {
-//                    fileBrowser.enableUi();
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                fileBrowser.enableUi();
-//            }
-//
-//        });
     }
 
     public void newFile(String baseFolder, FileInfo[] files) {
@@ -619,21 +589,6 @@ public class SshMenuHandler {
             }
         });
         
-//        fileBrowser.getHolder().executor.submit(() -> {
-//            fileBrowser.disableUi();
-//            try {
-//                if (fileOperations.newFile(files, fileBrowserView.getFileSystem(), baseFolder,
-//                        fileBrowserView.getSshClient(), fileBrowser.getInfo().getPassword())) {
-//                    fileBrowserView.render(baseFolder);
-//                } else {
-//                    fileBrowser.enableUi();
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                fileBrowser.enableUi();
-//            }
-//
-//        });
     }
 
     public void newFolder(String baseFolder, FileInfo[] files) {
@@ -644,21 +599,6 @@ public class SshMenuHandler {
             }
         });
         
-//        fileBrowser.getHolder().executor.submit(() -> {
-//            fileBrowser.disableUi();
-//            try {
-//                if (fileOperations.newFolder(files, baseFolder, fileBrowserView.getFileSystem(),
-//                        fileBrowserView.getSshClient(), fileBrowser.getInfo().getPassword())) {
-//                    fileBrowserView.render(baseFolder);
-//                } else {
-//                    fileBrowser.enableUi();
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                fileBrowser.enableUi();
-//            }
-//
-//        });
     }
 
     public void createLink(String baseFolder, FileInfo[] files) {
@@ -669,19 +609,6 @@ public class SshMenuHandler {
             }
         });
         
-//        fileBrowser.getHolder().executor.submit(() -> {
-//            fileBrowser.disableUi();
-//            try {
-//                if (fileOperations.createLink(files, fileBrowserView.getFileSystem(), fileBrowserView.getSshClient())) {
-//                    fileBrowserView.render(baseFolder);
-//                } else {
-//                    fileBrowser.enableUi();
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                fileBrowser.enableUi();
-//            }
-//        });
     }
 
     private void handlePaste() throws LocalOperationException {

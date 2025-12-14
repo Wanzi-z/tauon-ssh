@@ -101,9 +101,6 @@ public class SshFileOperations {
                     || JOptionPane.showConfirmDialog(null,
                     "Access denied, rename using sudo?", getBundle().getString("general.message.ask_use_sudo"),
                     JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
-//                if (!instance.isSessionClosed()) {
-//                    JOptionPane.showMessageDialog(null, getBundle().getString("general.message.operation_failed"));
-//                }
                 return false;
             }
             SSHCommandRunner sshCommandRunner = new SSHCommandRunner()

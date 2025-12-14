@@ -2,7 +2,7 @@ package tauon.app.settings;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 import tauon.app.ui.laf.theme.DarkTerminalTheme;
-import tauon.app.ui.components.editortablemodel.EditorEntry;
+import tauon.app.ui.dialogs.settings.EditorEntry;
 import tauon.app.util.misc.*;
 
 import java.awt.event.InputEvent;
@@ -663,19 +663,6 @@ public class Settings {
         this.firstFileBrowserView = firstFileBrowserView;
     }
     
-    
-
-//    @JsonSetter("fileTransferMode")
-//    public void setOldFileTransferMode(String s) {
-//        if (s == null) {
-//            fileTransferMode = Constants.TransferMode.NORMAL;
-//        } else if (s.equalsIgnoreCase("prompt")) {
-//            fileTransferMode = Constants.TransferMode.NORMAL;
-//        } else {
-//            fileTransferMode = Constants.TransferMode.valueOf(s);
-//        }
-//    }
-
     @JsonSetter("conflictAction")
     public void setOldConflictAction(String s) {
 

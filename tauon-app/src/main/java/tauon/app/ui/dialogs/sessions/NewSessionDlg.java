@@ -343,11 +343,6 @@ public class NewSessionDlg extends JDialog implements ActionListener, TreeSelect
                 if (parentNode == null) {
                     parentNode = rootNode;
                 }
-//                Object obj = parentNode.getUserObject();
-//                if (obj instanceof SiteInfo) {
-//                    parentNode = (DefaultMutableTreeNode) parentNode.getParent();
-//                    obj = parentNode.getUserObject();
-//                }
                 
                 DefaultMutableTreeNode childNode = TreeManager.createNewSiteAndAppendToParentNode(
                         parentNode,
@@ -549,11 +544,6 @@ public class NewSessionDlg extends JDialog implements ActionListener, TreeSelect
             case "btnExport":
                 
                 AlertDialogUtils.showInfo(window, getBundle().getString("app.sessions.message.goto_settings_to_export"));
-                
-//                try {
-//                    SessionsExportImport.exportSessions(window);
-//                } catch (OperationCancelledException ignored) {
-//                }
                 
                 break;
             default:

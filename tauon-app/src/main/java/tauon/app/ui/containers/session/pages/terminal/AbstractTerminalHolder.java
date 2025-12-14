@@ -89,23 +89,6 @@ public abstract class AbstractTerminalHolder extends Page implements AutoCloseab
     
     public abstract void onNewTabClicked() throws SessionClosedException;
 
-//    protected void createUi(){
-//
-//        long t1 = System.currentTimeMillis();
-//        try {
-//            AbstractTerminalComponent tc = new AbstractTerminalComponent(
-//                    String.valueOf(c), null, guiHandle, connectionHandler.openSessionHandle()
-//            );
-//            tc.setTabHandle(this.tabs.addTab(tc));
-//        } catch (SessionClosedException e) {
-//            guiHandle.reportException(e);
-//        }
-//
-//        long t2 = System.currentTimeMillis();
-//        LOG.debug("Terminal was init in: {} ms", t2 - t1);
-//
-//    }
-
     private void focusTerminal() {
         tabs.requestFocusInWindow();
         System.err.println("Terminal component shown");

@@ -13,7 +13,7 @@ import com.sun.jna.platform.win32.WinReg.HKEY;
 import com.sun.jna.win32.StdCallLibrary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tauon.app.ui.components.editortablemodel.EditorEntry;
+import tauon.app.ui.dialogs.settings.EditorEntry;
 
 import java.awt.*;
 import java.io.*;
@@ -22,8 +22,6 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import static tauon.app.util.misc.Constants.HELP_URL;
 
 /**
  * @author subhro

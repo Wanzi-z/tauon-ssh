@@ -307,9 +307,6 @@ public class FileBrowser extends Page {
     }
     
     public void downloadInBackground(FileInfo[] remoteFiles, String targetLocalDirectory) {
-//        FileSystem targetFs = LocalFileSystem.getInstance();
-//        TauonRemoteSessionInstance instance = getHolder().createBackgroundSession();
-//        SSHConnectionHandler.TempSshFileSystem sourceFs = sshConnectionHandler.openTempSshFileSystem();
         
         FileTransferRemoteToLocal transfer = new FileTransferRemoteToLocal(
                 remoteFiles, targetLocalDirectory, new ToGuiThread(getHolder()), sshConnectionHandler,
@@ -357,27 +354,6 @@ public class FileBrowser extends Page {
             getHolder().getAppWindow().startFileTransfer(transfer);
         }
         
-//        FileSystem sourceFs = LocalFileSystem.getInstance();
-//        SSHConnectionHandler.TempSshFileSystem targetFs = sshConnectionHandler.openTempSshFileSystem();
-//        FileTransfer transfer = new FileTransfer(sourceFs, targetFs, localFiles, targetRemoteDirectory,
-//                SettingsConfigManager.getSettings().getConflictAction(),
-//                getHolder());
-//        getHolder().getAppWindow().getFileTransferManager().startFileTransfer(
-//                transfer,
-//                true,
-//                new FileTransferProgress.Adapter(){
-//                    @Override
-//                    public void done(FileTransfer fileTransfer) {
-//                        targetFs.dispose();
-//                    }
-//
-//                    @Override
-//                    public void error(String cause, Exception e, FileTransfer fileTransfer) {
-//                        targetFs.dispose();
-//                    }
-//                }
-//        );
-    
     }
 
     public void refreshViewMode() {
@@ -404,18 +380,6 @@ public class FileBrowser extends Page {
     }
     
     public void close() {
-    
-//        if (this.backgroundTransferPool != null) {
-//            this.backgroundTransferPool.shutdownNow();
-//
-//            try {
-//                if(!this.backgroundTransferPool.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS)){
-//                    LOG.error("the background transfer pool was not fully shutdown");
-//                }
-//            } catch (InterruptedException e1) {
-//                LOG.error("Error while closing the background transfer pool", e1);
-//            }
-//        }
     
     }
     

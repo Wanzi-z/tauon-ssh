@@ -48,12 +48,6 @@ public class Constants {
     public static final VersionEntry VERSION;
     
     static {
-//        Properties p = new Properties();
-//        try {
-//            p.load(Constants.class.getResourceAsStream("/version.properties"));
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
         VERSION = new VersionEntry("v" + tauon.app.Version.getVersion());//getProperty("tauon-version"));
     }
     

@@ -146,23 +146,6 @@ public class SshFileBrowserView extends AbstractFileBrowserView {
                 renderDirectory(sshfs, this.path, useCache);
             }
         });
-        
-//        try {
-//            SshFileSystem sshfs = this.fileBrowser.getSshFileSystem();
-//            if (path == null) {
-//                this.path = sshfs.getHome();
-//            }
-//            try {
-//                renderDirectory(sshfs, this.path, useCache);
-//            } catch (RemoteOperationException.FileNotFound e) {
-//                AlertDialogUtils.showInfo(this, LanguageService.getBundle().getString("app.files.message.failed_going_rendering_home"));
-//                this.path = sshfs.getHome();
-//                renderDirectory(sshfs, this.path, useCache);
-//            }
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            // TODO notify user
-//        }
     }
 
     @Override
@@ -229,12 +212,8 @@ public class SshFileBrowserView extends AbstractFileBrowserView {
 
             if (sourceFs instanceof LocalFileSystem) {
                 System.out.println("Dropped: " + transferData);
-//                if (SettingsConfigManager.getSettings().getFileTransferMode() == Constants.TransferMode.BACKGROUND) {
-                    this.fileBrowser.uploadInBackground(transferData.getFiles(), this.path);
-                    return true;
-//                }
-//                FileSystem targetFs = this.fileBrowser.getSshFileSystem();
-//                this.fileBrowser.newFileTransfer(sourceFs, targetFs, transferData.getFiles(), this.path);
+                this.fileBrowser.uploadInBackground(transferData.getFiles(), this.path);
+                return true;
             } else if (sourceFs == this.fileBrowser.getSshFileSystem()) {
                 // TODO implement this
                 System.out.println("SshFs is of same instance: " + (sourceFs == this.fileBrowser.getSshFileSystem()));

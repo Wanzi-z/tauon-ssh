@@ -43,16 +43,6 @@ public class DiskAnalysisTask implements Runnable {
             
             client.exec(commandRunner);
             
-//            if(sudo){
-//                SudoUtils.runSudoWithOutput(
-//                        "export POSIXLY_CORRECT=1;",
-//                        "du '" + folder + "'",
-//                        stopFlag,
-//                        client, output, null
-//                );
-//            }else{
-//                client.exec("export POSIXLY_CORRECT=1; " + "du '" + folder + "'", stopFlag, output);
-//            }
             List<String> lines = Arrays.asList(output.toString().split("\n"));
             DuOutputParser duOutputParser = new DuOutputParser(folder);
             int prefixLen = folder.endsWith("/") ? folder.length() - 1 : folder.length();

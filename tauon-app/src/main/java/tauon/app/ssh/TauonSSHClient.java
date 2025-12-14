@@ -95,9 +95,11 @@ public class TauonSSHClient {
                     thread.start();
                     
                     established = true;
-                } finally {
-                
+                }  catch (ConnectionException | TransportException e) {
+                    established = false;
+                    guiHandle.reportPortForwardingFailed(rule, e);
                 }
+                
             }else{
                 
                 SSHClient ssh = sshConnectedHop.sshj;
@@ -608,7 +610,7 @@ public class TauonSSHClient {
             return false;
         }
         
-        private void authPublicKey(int index, String user) throws Exception {
+        private void authPublicKey(int ignoredIndex, String user) throws Exception {
             KeyProvider provider = null;
             if (info.getPrivateKeyFile() != null && !info.getPrivateKeyFile().isEmpty()) {
                 File keyFile = new File(info.getPrivateKeyFile());
@@ -696,14 +698,14 @@ public class TauonSSHClient {
                     throw ExceptionUtils.sneakyThrow(e);
                 }
             });
-            thread.setUncaughtExceptionHandler((th, e) -> {
-                thrown.set(e);
-            });
+            thread.setUncaughtExceptionHandler((th, e) -> thrown.set(e));
             thread.start();
             
             // Wait until bound
             while (thread.isAlive() && serverSocket.isBound() && thrown.get() == null) {
                 // Yes! busy-waiting
+                // TODO find the way to block server socket until bound
+                //noinspection BusyWait
                 Thread.sleep(100);
             }
             

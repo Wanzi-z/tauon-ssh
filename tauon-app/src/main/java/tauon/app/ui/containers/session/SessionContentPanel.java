@@ -27,7 +27,6 @@ import tauon.app.ui.utils.AlertDialogUtils;
 import tauon.app.util.misc.FormatUtils;
 
 import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
@@ -104,18 +103,6 @@ public class SessionContentPanel extends AbstractSessionContentPanel implements 
     
     public FileBrowser getFileBrowser() {
         return fileBrowser;
-    }
-    
-//    public FileTransferProgress startFileTransferModal(Consumer<Boolean> stopCallback) {
-//        rootPane.setGlassPane(this.progressPanel);
-//        FileTransferProgress h = progressPanel.show(stopCallback);
-//        this.revalidate();
-//        this.repaint();
-//        return h;
-//    }
-    
-    public void downloadFileToLocal(FileInfo remoteFile, Consumer<File> callback) {
-    
     }
     
     public void openLog(FileInfo remoteFile) {

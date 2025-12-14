@@ -99,13 +99,10 @@ public class OpenSSHKnownHostsBugfixed
                 if (entry != null) {
                     entries.add(entry);
                 }
-            } catch (SSHException ignore) {
-                log.debug("Bad line ({}): {} ", ignore.toString(), line);
-            } catch (SSHRuntimeException ignore) {
-                log.debug("Failed to process line ({}): {} ", ignore.toString(), line);
-            } catch (Exception ignore) {
-                ignore.printStackTrace();
-                log.debug("Failed to process line ({}): {} ", ignore.toString(), line);
+            } catch (SSHException e) {
+                log.debug("Bad line ({})", line, e);
+            } catch (Exception e) { // | SSHRuntimeException
+                log.debug("Failed to process line ({})", line, e);
             }
         }
     }
@@ -139,7 +136,7 @@ public class OpenSSHKnownHostsBugfixed
                     }
                 }
             } catch (IOException ioe) {
-                log.error("Error with {}: {}", e, ioe);
+                log.error("Error with {}", e, ioe);
                 return false;
             }
 
@@ -172,7 +169,7 @@ public class OpenSSHKnownHostsBugfixed
                         knownHostAlgorithms.add(type.toString());
                     }
                 }
-            } catch (IOException ioe) {
+            } catch (IOException ignored) {
             }
         }
 
@@ -192,16 +189,13 @@ public class OpenSSHKnownHostsBugfixed
         return entries;
     }
 
-    private static final String LS = System.getProperty("line.separator");
+    private static final String LS = System.lineSeparator();
 
     public void write()
             throws IOException {
-        final BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(khFile));
-        try {
+        try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(khFile))) {
             for (KnownHostEntry entry : entries)
                 bos.write((entry.getLine() + LS).getBytes(StandardCharsets.UTF_8));
-        } finally {
-            bos.close();
         }
     }
 
@@ -318,7 +312,7 @@ public class OpenSSHKnownHostsBugfixed
 
             final String comment;
             if (i < split.length) {
-                comment = split[i++];
+                comment = split[i]; //i++];
             } else {
                 comment = null;
             }
@@ -377,7 +371,7 @@ public class OpenSSHKnownHostsBugfixed
         }
 
         @Override
-        public boolean appliesTo(String host) throws IOException {
+        public boolean appliesTo(String host) {
             return false;
         }
 
@@ -488,7 +482,7 @@ public class OpenSSHKnownHostsBugfixed
     }
 
     public static class BadHostEntry implements KnownHostEntry {
-        private String line;
+        private final String line;
 
         public BadHostEntry(String line) {
             this.line = line;
@@ -505,17 +499,17 @@ public class OpenSSHKnownHostsBugfixed
         }
 
         @Override
-        public boolean appliesTo(String host) throws IOException {
+        public boolean appliesTo(String host) {
             return false;
         }
 
         @Override
-        public boolean appliesTo(KeyType type, String host) throws IOException {
+        public boolean appliesTo(KeyType type, String host) {
             return false;
         }
 
         @Override
-        public boolean verify(PublicKey key) throws IOException {
+        public boolean verify(PublicKey key) {
             return false;
         }
 

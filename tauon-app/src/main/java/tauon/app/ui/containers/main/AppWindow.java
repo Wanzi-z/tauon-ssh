@@ -385,9 +385,6 @@ public class AppWindow extends JFrame {
     }
     
     private Component createSessionPanelTop() {
-//        JLabel lblSession = new JLabel(getBundle().getString("app.ui.label.sessions"));
-//        lblSession.setFont(App.skin.getDefaultFont().deriveFont(Constants.SMALL_TEXT_SIZE));
-        
         Font font = App.skin.getIconFont().deriveFont(Constants.SMALL_TEXT_SIZE);
         Dimension dimension = new Dimension(30, 30);
         
@@ -424,9 +421,6 @@ public class AppWindow extends JFrame {
     
     private Component createCollapsedSessionPanelTop() {
 
-//        JLabel lblSession = new JLabel(getBundle().getString("app.ui.label.sessions"));
-//        lblSession.setFont(App.skin.getDefaultFont().deriveFont(Constants.SMALL_TEXT_SIZE));
-        
         Font font = App.skin.getIconFont().deriveFont(Constants.SMALL_TEXT_SIZE);
         Dimension dimension = new Dimension(30, 30);
         
@@ -443,12 +437,6 @@ public class AppWindow extends JFrame {
         btnNew.addActionListener(e -> this.createFirstSessionPanel());
         btnNew.setToolTipText(getBundle().getString("app.ui.button.open_sites.tooltip"));
 
-//        JButton btnNew = new JButton();
-//        btnNew.setFont(font);
-//        btnNew.setText(FontAwesomeContants.FA_TELEVISION);
-//        btnNew.setMaximumSize(dimension);
-//        btnNew.addActionListener(e -> this.createFirstSessionPanel());
-        
         JButton btnLocalTerm = new JButton(FontAwesomeContants.FA_TERMINAL);
         btnLocalTerm.addActionListener(e -> sessionListPanel.createLocalSession());
         btnLocalTerm.setFont(App.skin.getIconFont().deriveFont(Constants.SMALL_TEXT_SIZE));
@@ -478,9 +466,6 @@ public class AppWindow extends JFrame {
         
     }
     
-    /**
-     * @param sessionContentPanel
-     */
     public void showSession(AbstractSessionContentPanel sessionContentPanel) {
         cardPanel.add(sessionContentPanel, sessionContentPanel.hashCode() + "");
         sessionCard.show(cardPanel, sessionContentPanel.hashCode() + "");
@@ -488,14 +473,8 @@ public class AppWindow extends JFrame {
         repaint();
     }
     
-    /**
-     * @param sessionContentPanel
-     */
     public void removeSession(AbstractSessionContentPanel sessionContentPanel) {
         cardPanel.remove(sessionContentPanel);
-        // TODO remove responsibility from here
-//        uploadPanel.removePendingTransfers(sessionContentPanel);
-//        downloadPanel.removePendingTransfers(sessionContentPanel);
         revalidate();
         repaint();
     }
@@ -527,8 +506,6 @@ public class AppWindow extends JFrame {
                     VersionEntry lastVersion = VersionEntry.getLastVersionFromGithub();
                     if (lastVersion != null) {
                         if (lastVersion.compareTo(VERSION) > 0) {
-//                            lblUpdate.setText(FontAwesomeContants.FA_DOWNLOAD);
-//                            lblUpdateText.setText("Update available");
                             if (JOptionPane.showConfirmDialog(
                                     AppWindow.this,
                                     FormatUtils.$$(
@@ -683,10 +660,6 @@ public class AppWindow extends JFrame {
         return inputBlocker;
     }
 
-//    public FileTransferManager getFileTransferManager() {
-//        return fileTransferManager;
-//    }
-    
     public AbstractSessionContentPanel findSessionById(UUID uuid) {
         return sessionListPanel.findSessionById(uuid);
     }

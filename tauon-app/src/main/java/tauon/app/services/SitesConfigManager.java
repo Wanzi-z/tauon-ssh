@@ -179,13 +179,6 @@ public class SitesConfigManager {
         return savedSessionTree;
     }
     
-//    public synchronized void populatePassword(PasswordPromptConsumer passwordPromptConsumer) throws OperationCancelledException {
-//        SavedSessionTree seesionTree = getSessionTree(passwordPromptConsumer);
-//        if (seesionTree != null) {
-//            populatePassword(seesionTree.getFolder());
-//        }
-//    }
-    
     public static void populatePasswordsInto(SessionFolder folder, Map<String, PasswordEntry> passwordMap) {
         
         for (SiteInfo info : folder.getItems()) {
@@ -216,29 +209,6 @@ public class SitesConfigManager {
             populatePasswordsInto(f, passwordMap);
         }
     }
-    
-//    public void setPasswords(SavedSessionTree savedSessionTree) {
-//        if (!this.isUnlocked()) {
-//            if (SettingsService.getSettings().isUsingMasterPassword()) {
-//                if (!unlockUsingMasterPassword()) {
-//                    return;
-//                }
-//            } else {
-//                try {
-//                    unlockStore(new char[0]);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    return;
-//                }
-//            }
-//        }
-//        setPasswords(savedSessionTree.getFolder());
-//        try {
-//            saveKeyStore();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
     
     private static void setPasswords(SessionFolder folder, Map<String, PasswordEntry> passwordMap) {
         for (SiteInfo info : folder.getItems()) {

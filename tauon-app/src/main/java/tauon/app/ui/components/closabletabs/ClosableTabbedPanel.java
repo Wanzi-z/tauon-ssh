@@ -210,12 +210,6 @@ public class ClosableTabbedPanel extends JPanel {
             titleLabel.setHorizontalAlignment(JLabel.CENTER);
             this.add(titleLabel);
 
-//            if (closable) {
-//                tabCloseButton = new TabCloseButton();
-//                tabCloseButton.setBackground(Color.RED);
-//                tabCloseButton.setForeground(App.skin.getInfoTextForeground());
-//                this.add(tabCloseButton, BorderLayout.EAST);
-//            }
         }
         
         @Override

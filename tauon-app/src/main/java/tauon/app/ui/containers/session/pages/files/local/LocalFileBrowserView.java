@@ -64,7 +64,7 @@ public class LocalFileBrowserView extends AbstractFileBrowserView {
                     setTabTitle(path);
                 });
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.debug("Exception while listing local files.", e);
             }
         });
     }
@@ -127,27 +127,6 @@ public class LocalFileBrowserView extends AbstractFileBrowserView {
                 setTabTitle(this.path);
             });
         });
-        
-//        fileBrowser.getHolder().executor.submit(() -> {
-//            fileBrowser.disableUi();
-//            try {
-//                if (this.path == null) {
-//                    this.path = fs.getHome();
-//                }
-//                List<FileInfo> list = fs.list(this.path);
-//                SwingUtilities.invokeLater(() -> {
-//                    addressBar.setText(this.path);
-//                    folderView.setItems(list);
-//                    int tc = list.size();
-//                    String text = String.format("Total %d remote file(s)", tc);
-//                    fileBrowser.updateRemoteStatus(text);
-//                    tabTitle.getCallback().accept(PathUtils.getFileName(this.path));
-//                });
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            fileBrowser.enableUi();
-//        });
     }
 
     @Override
