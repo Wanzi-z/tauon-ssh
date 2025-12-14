@@ -334,4 +334,8 @@ public class SSHConnectionHandler {
         
     }
     
+    public List<TauonSSHClient.PortForwardingState> getPortsForwarding() {
+        return mainSsh.getPortsForwarding();
+    }
+    
 }

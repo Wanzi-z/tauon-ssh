@@ -82,21 +82,31 @@ public abstract class AbstractSessionContentPanel extends JPanel implements Page
         
         Page[] pageArr = createPages();
         
-        this.pages = new TabbedPage[pageArr.length];
+        this.pages = new TabbedPage[pageArr.length-1]; // Assumes "null" is present
+        boolean nullFound = false;
         for (int i = 0; i < pageArr.length; i++) {
-            TabbedPage tabbedPage = new TabbedPage(pageArr[i], this);
-            this.pages[i] = tabbedPage;
-            this.cardPanel.add(tabbedPage.getPage(), tabbedPage.getId());
-            pageArr[i].putClientProperty("pageId", tabbedPage.getId());
+            if(pageArr[i] != null) {
+                int j = nullFound ? i-1 : i;
+                TabbedPage tabbedPage = new TabbedPage(pageArr[i], this);
+                this.pages[j] = tabbedPage;
+                this.cardPanel.add(tabbedPage.getPage(), tabbedPage.getId());
+                pageArr[i].putClientProperty("pageId", tabbedPage.getId());
+            }else{
+                nullFound = true;
+            }
         }
         
         LayoutUtilities.equalizeSize(this.pages);
         
+        int i = 0;
+        nullFound = false;
         for (TabbedPage item : this.pages) {
+            if(!nullFound && pageArr[i++] == null) {
+                nullFound = true;
+                contentTabs.add(Box.createHorizontalGlue());
+            }
             contentTabs.add(item);
         }
-        
-        contentTabs.add(Box.createHorizontalGlue());
         
         this.contentPane.add(contentTabs, BorderLayout.NORTH);
         this.contentPane.add(this.cardPanel);

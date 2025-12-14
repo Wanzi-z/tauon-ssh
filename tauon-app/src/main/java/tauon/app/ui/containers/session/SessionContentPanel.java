@@ -20,6 +20,7 @@ import tauon.app.ui.containers.main.AppWindow;
 import tauon.app.ui.containers.session.pages.files.FileBrowser;
 import tauon.app.ui.containers.session.pages.info.InfoPage;
 import tauon.app.ui.containers.session.pages.logviewer.LogViewer;
+import tauon.app.ui.containers.session.pages.status.StatusPage;
 import tauon.app.ui.containers.session.pages.terminal.TerminalHolder;
 import tauon.app.ui.containers.session.pages.tools.ToolsPage;
 import tauon.app.ui.utils.AlertDialogUtils;
@@ -49,6 +50,7 @@ public class SessionContentPanel extends AbstractSessionContentPanel implements 
     private final TerminalHolder terminalHolder;
     private final InfoPage processViewer;
     private final ToolsPage toolsPage;
+    private final StatusPage statusPage;
     
     private final AtomicBoolean closed = new AtomicBoolean(false);
     
@@ -72,6 +74,7 @@ public class SessionContentPanel extends AbstractSessionContentPanel implements 
         logViewer = new LogViewer(this);
         processViewer = new InfoPage(this);
         toolsPage = new ToolsPage(this);
+        statusPage = new StatusPage(this);
         
         createUi();
         
@@ -81,10 +84,10 @@ public class SessionContentPanel extends AbstractSessionContentPanel implements 
     protected Page[] createPages() {
         if (SettingsConfigManager.getSettings().isFirstFileBrowserView()) {
             return new Page[]{fileBrowser, terminalHolder, logViewer,
-                    processViewer, toolsPage};
+                    processViewer, toolsPage, null, statusPage};
         } else {
             return new Page[]{terminalHolder, fileBrowser, logViewer,
-                    processViewer, toolsPage};
+                    processViewer, toolsPage, null, statusPage};
         }
     }
     

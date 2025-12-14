@@ -402,7 +402,7 @@ public class AppWindow extends JFrame {
         btnNew.setText(FontAwesomeContants.FA_TELEVISION);
         btnNew.setMaximumSize(dimension);
         btnNew.addActionListener(e -> this.createFirstSessionPanel());
-        btnNew.setToolTipText(getBundle().getString("app.ui.button.tooltip.open_sites"));
+        btnNew.setToolTipText(getBundle().getString("app.ui.button.open_sites.tooltip"));
         
         JButton btnLocalTerm = new JButton(FontAwesomeContants.FA_TERMINAL);
         btnLocalTerm.addActionListener(e -> sessionListPanel.createLocalSession());

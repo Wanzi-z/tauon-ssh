@@ -34,9 +34,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.ServerSocket;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -50,10 +48,79 @@ public class TauonSSHClient {
         String user;
     }
     
-    private static class PortForwardingState{
-        PortForwardingRule rule;
-        ServerSocket serverSocket;
-        Thread thread;
+    public class PortForwardingState{
+        private final PortForwardingRule rule;
+        private ServerSocket serverSocket;
+        private Thread thread;
+        private boolean established;
+        
+        private PortForwardingState(PortForwardingRule rule) {
+            this.rule = rule;
+        }
+        
+        public PortForwardingRule getRule() {
+            return rule;
+        }
+        
+        public boolean isEstablished() {
+            return established;
+        }
+        
+        private void start() throws IOException {
+            if(established)
+                return;
+            
+            if (rule.getType() == PortForwardingRule.PortForwardingType.Local) {
+                try {
+                    serverSocket = new ServerSocket();
+                    serverSocket.setReuseAddress(true);
+                    serverSocket.bind(new InetSocketAddress(rule.getLocalHost(), rule.getLocalPort()));
+                    
+                    SSHClient ssh = sshConnectedHop.sshj;
+                    thread = new Thread(() -> {
+                        try {
+                            ssh.newLocalPortForwarder(
+                                            new Parameters(rule.getLocalHost(), rule.getLocalPort(), rule.getRemoteHost(), rule.getRemotePort()), serverSocket)
+                                    .listen();
+                        } catch (IOException e) {
+                            thread = null;
+                            established = false;
+                            guiHandle.reportPortForwardingFailed(rule, e);
+                        } finally {
+                            thread = null;
+                            established = false;
+                        }
+                    });
+                    
+                    thread.start();
+                    
+                    established = true;
+                } finally {
+                
+                }
+            }else{
+                
+                SSHClient ssh = sshConnectedHop.sshj;
+                
+                /*
+                 * We make _server_ listen on port 8080, which forwards all connections to us as
+                 * a channel, and we further forward all such channels to google.com:80
+                 */
+                try {
+                    ssh.getRemotePortForwarder().bind(
+                            // where the server should listen
+                            new RemotePortForwarder.Forward(rule.getRemoteHost(), rule.getRemotePort()),
+                            // what we do with incoming connections that are forwarded to us
+                            new SocketForwardingConnectListener(new InetSocketAddress(rule.getLocalHost(), rule.getLocalPort())));
+                    established = true;
+                } catch (ConnectionException | TransportException e) {
+                    established = false;
+                    guiHandle.reportPortForwardingFailed(rule, e);
+                }
+                
+            }
+            
+        }
     }
     
     private static final Logger LOG = LoggerFactory.getLogger(TauonSSHClient.class);
@@ -83,6 +150,10 @@ public class TauonSSHClient {
         this.passwordFinder = passwordFinder;
         this.executor = executor;
         this.openPortForwarding = openPortForwarding;
+    }
+    
+    public List<PortForwardingState> getPortsForwarding() {
+        return Collections.unmodifiableList(portForwardingStates);
     }
     
     public synchronized boolean connect(boolean force) throws InterruptedException {
@@ -130,24 +201,15 @@ public class TauonSSHClient {
                     }
                 });
                 
-                if(openPortForwarding) {
+                for (PortForwardingRule r : info.getPortForwardingRules()) {
+                    PortForwardingState portForwardingState = new PortForwardingState(r);
+                    portForwardingStates.add(portForwardingState);
                     
-                    for (PortForwardingRule r : info.getPortForwardingRules()) {
-                        if(!r.isEnabled())
-                            continue;
-                        
-                        if (r.getType() == PortForwardingRule.PortForwardingType.Local) {
-                            try {
-                                forwardLocalPort(r);
-                            } catch (Exception e) {
-                                LOG.error("Local port forwarding failed: {}", r, e);
-                            }
-                        } else if (r.getType() == PortForwardingRule.PortForwardingType.Remote) {
-                            try {
-                                forwardRemotePort(r);
-                            } catch (Exception e) {
-                                LOG.error("Remote port forwarding failed: {}", r, e);
-                            }
+                    if(openPortForwarding && r.isEnabled()) {
+                        try {
+                            portForwardingState.start();
+                        } catch (Exception e) {
+                            LOG.error("Port forwarding failed: {}", r, e);
                         }
                     }
                     
@@ -319,59 +381,6 @@ public class TauonSSHClient {
             LOG.error("Exception while starting session.", e);
             throw new RemoteOperationException.RealIOException(e);
         }
-    }
-    
-    private void forwardLocalPort(PortForwardingRule r) throws Exception {
-        PortForwardingState portForwardingState = new PortForwardingState();
-        portForwardingState.rule = r;
-        portForwardingStates.add(portForwardingState);
-        
-        portForwardingState.serverSocket = new ServerSocket();
-        portForwardingState.serverSocket.setReuseAddress(true);
-        portForwardingState.serverSocket.bind(new InetSocketAddress(r.getLocalHost(), r.getLocalPort()));
-        
-        SSHClient ssh = sshConnectedHop.sshj;
-        portForwardingState.thread = new Thread(() -> {
-            try {
-                ssh.newLocalPortForwarder(
-                                new Parameters(r.getLocalHost(), r.getLocalPort(), r.getRemoteHost(), r.getRemotePort()), portForwardingState.serverSocket)
-                        .listen();
-            } catch (IOException e) {
-                portForwardingState.thread = null;
-                guiHandle.reportPortForwardingFailed(r, e);
-            } finally {
-                portForwardingState.thread = null;
-            }
-        });
-        
-        portForwardingState.thread.start();
-        
-    }
-    
-    private void forwardRemotePort(PortForwardingRule r) {
-        PortForwardingState portForwardingState = new PortForwardingState();
-        portForwardingState.rule = r;
-        portForwardingStates.add(portForwardingState);
-        
-        SSHClient ssh = sshConnectedHop.sshj;
-        
-        /*
-         * We make _server_ listen on port 8080, which forwards all connections to us as
-         * a channel, and we further forward all such channels to google.com:80
-         */
-        try {
-            ssh.getRemotePortForwarder().bind(
-                    // where the server should listen
-                    new RemotePortForwarder.Forward(r.getRemoteHost(), r.getRemotePort()),
-                    // what we do with incoming connections that are forwarded to us
-                    new SocketForwardingConnectListener(new InetSocketAddress(r.getLocalHost(), r.getLocalPort())));
-        } catch (ConnectionException | TransportException e) {
-            portForwardingState.thread = null;
-            guiHandle.reportPortForwardingFailed(r, e);
-        } finally {
-            portForwardingState.thread = null;
-        }
-        
     }
     
     private class SSHConnectedHop {
