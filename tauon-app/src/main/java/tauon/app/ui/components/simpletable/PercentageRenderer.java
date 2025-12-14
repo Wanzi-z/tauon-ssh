@@ -1,4 +1,4 @@
-package tauon.app.ui.components.tablerenderers;
+package tauon.app.ui.components.simpletable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

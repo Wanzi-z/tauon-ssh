@@ -1,7 +1,7 @@
 package tauon.app.ui.containers.session.pages.tools.diskspace;
 
-import tauon.app.ui.components.tablerenderers.ByteCountValue;
-import tauon.app.ui.components.tablerenderers.PercentageValue;
+import tauon.app.ui.components.simpletable.ByteCountValue;
+import tauon.app.ui.components.simpletable.PercentageValue;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;

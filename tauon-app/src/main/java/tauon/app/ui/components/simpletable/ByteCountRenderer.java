@@ -1,4 +1,4 @@
-package tauon.app.ui.components.tablerenderers;
+package tauon.app.ui.components.simpletable;
 
 import tauon.app.util.misc.FormatUtils;
 

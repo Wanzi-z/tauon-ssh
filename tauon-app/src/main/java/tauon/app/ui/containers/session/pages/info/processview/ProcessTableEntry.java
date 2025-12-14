@@ -1,6 +1,6 @@
 package tauon.app.ui.containers.session.pages.info.processview;
 
-import tauon.app.ui.components.tablerenderers.ByteCountValue;
+import tauon.app.ui.components.simpletable.ByteCountValue;
 
 public class ProcessTableEntry {
     private String name;

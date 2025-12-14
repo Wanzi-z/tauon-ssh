@@ -10,7 +10,7 @@ import tauon.app.ssh.IStopper;
 import tauon.app.ssh.SSHCommandRunner;
 import tauon.app.ssh.SSHConnectionHandler;
 import tauon.app.ui.components.page.subpage.Subpage;
-import tauon.app.ui.components.tablerenderers.ByteCountValue;
+import tauon.app.ui.components.simpletable.ByteCountValue;
 import tauon.app.ui.containers.session.SessionContentPanel;
 import tauon.app.util.misc.ScriptLoader;
 

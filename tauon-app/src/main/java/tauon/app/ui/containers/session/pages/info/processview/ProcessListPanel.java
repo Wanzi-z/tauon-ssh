@@ -2,8 +2,8 @@ package tauon.app.ui.containers.session.pages.info.processview;
 
 import tauon.app.ui.components.misc.SkinnedScrollPane;
 import tauon.app.ui.components.misc.SkinnedTextField;
-import tauon.app.ui.components.tablerenderers.ByteCountRenderer;
-import tauon.app.ui.components.tablerenderers.ByteCountValue;
+import tauon.app.ui.components.simpletable.ByteCountRenderer;
+import tauon.app.ui.components.simpletable.ByteCountValue;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

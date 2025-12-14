@@ -18,6 +18,7 @@ public class PortForwardingEntry {
     
     public PortForwardingEntry(TauonSSHClient.PortForwardingState state) {
         this.state = state;
+        refresh();
     }
     
     public void refresh(){
