@@ -2,6 +2,7 @@ package tauon.app.ui.containers.session.pages.status.portforwarding;
 
 import tauon.app.settings.PortForwardingRule;
 import tauon.app.ssh.TauonSSHClient;
+import tauon.app.ui.components.simpletable.ConnectionStatusValue;
 
 public class PortForwardingEntry {
     private final TauonSSHClient.PortForwardingState state;
@@ -14,7 +15,7 @@ public class PortForwardingEntry {
     public int remotePort;
     public boolean enabled = true;
     
-    public boolean established;
+    public ConnectionStatusValue status;
     
     public PortForwardingEntry(TauonSSHClient.PortForwardingState state) {
         this.state = state;
@@ -29,7 +30,7 @@ public class PortForwardingEntry {
         remotePort = state.getRule().getRemotePort();
         localPort = state.getRule().getLocalPort();
         enabled = state.getRule().isEnabled();
-        established = state.isEstablished();
+        status = state.getStatus();
     }
     
     

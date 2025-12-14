@@ -24,7 +24,7 @@ public class SimpleTable<T> extends JTable {
 //        setIntercellSpacing(new Dimension(0, 0));
         setAutoCreateRowSorter(true);
         
-        Set<Class> types = new HashSet<>();
+        Set<Class<?>> types = new HashSet<>();
         for(SimpleColumn<T, ?> c: builder.columns){
             types.add(c.type);
         }
@@ -38,6 +38,8 @@ public class SimpleTable<T> extends JTable {
                 setDefaultRenderer(ByteCountValue.class, renderer = new ByteCountRenderer());
             }else if(c == PercentageValue.class){
                 setDefaultRenderer(PercentageValue.class, renderer = new PercentageRenderer());
+            }else if(c == ConnectionStatusValue.class){
+                setDefaultRenderer(ConnectionStatusValue.class, renderer = new ConnectionStatusRenderer());
             }else if(c == Object.class){
 //                setDefaultRenderer(Object.class, renderer = new DefaultTableCellRenderer());
                 continue;

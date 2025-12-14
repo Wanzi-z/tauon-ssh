@@ -24,6 +24,7 @@ import tauon.app.services.SitesConfigManager;
 import tauon.app.settings.HopEntry;
 import tauon.app.settings.PortForwardingRule;
 import tauon.app.settings.SiteInfo;
+import tauon.app.ui.components.simpletable.ConnectionStatusValue;
 import tauon.app.ui.containers.main.GraphicalHostKeyVerifier;
 import tauon.app.util.misc.ExceptionUtils;
 import tauon.app.util.misc.PlatformUtils;
@@ -31,6 +32,7 @@ import tauon.app.util.ssh.SshUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.ServerSocket;
@@ -52,7 +54,7 @@ public class TauonSSHClient {
         private final PortForwardingRule rule;
         private ServerSocket serverSocket;
         private Thread thread;
-        private boolean established;
+        private ConnectionStatusValue status = ConnectionStatusValue.DISABLED;
         
         private PortForwardingState(PortForwardingRule rule) {
             this.rule = rule;
@@ -62,12 +64,8 @@ public class TauonSSHClient {
             return rule;
         }
         
-        public boolean isEstablished() {
-            return established;
-        }
-        
         private void start() throws IOException {
-            if(established)
+            if(status == ConnectionStatusValue.ESTABLISHED)
                 return;
             
             if (rule.getType() == PortForwardingRule.PortForwardingType.Local) {
@@ -82,21 +80,21 @@ public class TauonSSHClient {
                             ssh.newLocalPortForwarder(
                                             new Parameters(rule.getLocalHost(), rule.getLocalPort(), rule.getRemoteHost(), rule.getRemotePort()), serverSocket)
                                     .listen();
+                            setStatus(ConnectionStatusValue.STOPPED);
                         } catch (IOException e) {
                             thread = null;
-                            established = false;
+                            setStatus(ConnectionStatusValue.ERROR);
                             guiHandle.reportPortForwardingFailed(rule, e);
                         } finally {
                             thread = null;
-                            established = false;
                         }
                     });
                     
                     thread.start();
                     
-                    established = true;
-                }  catch (ConnectionException | TransportException e) {
-                    established = false;
+                    setStatus(ConnectionStatusValue.ESTABLISHED);
+                }  catch (ConnectionException | TransportException | BindException e) {
+                    setStatus(ConnectionStatusValue.ERROR);
                     guiHandle.reportPortForwardingFailed(rule, e);
                 }
                 
@@ -114,14 +112,23 @@ public class TauonSSHClient {
                             new RemotePortForwarder.Forward(rule.getRemoteHost(), rule.getRemotePort()),
                             // what we do with incoming connections that are forwarded to us
                             new SocketForwardingConnectListener(new InetSocketAddress(rule.getLocalHost(), rule.getLocalPort())));
-                    established = true;
+                    setStatus(ConnectionStatusValue.ESTABLISHED);
                 } catch (ConnectionException | TransportException e) {
-                    established = false;
+                    setStatus(ConnectionStatusValue.ERROR);
                     guiHandle.reportPortForwardingFailed(rule, e);
                 }
                 
             }
             
+        }
+        
+        public void setStatus(ConnectionStatusValue status) {
+            this.status = status;
+            // TODO issue an event
+        }
+        
+        public ConnectionStatusValue getStatus() {
+            return status;
         }
     }
     

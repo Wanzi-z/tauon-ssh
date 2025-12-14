@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import tauon.app.ssh.TauonSSHClient;
 import tauon.app.ui.components.misc.SkinnedScrollPane;
 import tauon.app.ui.components.page.subpage.Subpage;
+import tauon.app.ui.components.simpletable.ConnectionStatusValue;
 import tauon.app.ui.components.simpletable.SimpleColumn;
 import tauon.app.ui.components.simpletable.SimpleTable;
 import tauon.app.ui.containers.session.SessionContentPanel;
@@ -47,7 +48,7 @@ public class PortForwardingStatusPanel extends Subpage {
                 .addColumn(getBundle().getString("app.sites.port_forwarding.label.remote_host"), e -> e.remoteHost)
                 .addColumn(getBundle().getString("app.sites.port_forwarding.label.remote_port"), e -> e.remotePort)
                 .addColumn(getBundle().getString("app.sites.port_forwarding.label.enabled"), e -> e.enabled)
-                .addColumn(getBundle().getString("app.status_port_forwarding.label.established"), e -> e.established)
+                .addColumn(getBundle().getString("app.status_port_forwarding.label.established"), ConnectionStatusValue.class, e -> e.status)
                 .build();
         add(new SkinnedScrollPane(table));
         
